@@ -23,6 +23,12 @@
       ],
       "@fiap-burger/setup/*": [
         "libs/setup/src/*"
+      ],
+      "@fiap-burger/tactical-design": [
+        "libs/tactical-design/src"
+      ],
+      "@fiap-burger/tactical-design/*": [
+        "libs/tactical-design/src/*"
       ]
     }
   }

@@ -15,6 +15,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/setup/tsconfig.lib.json"
       }
+    },
+    "tactical-design": {
+      "type": "library",
+      "root": "libs/tactical-design",
+      "entryFile": "index",
+      "sourceRoot": "libs/tactical-design/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/tactical-design/tsconfig.lib.json"
+      }
     }
   }
 }
