@@ -23,11 +23,11 @@ const { ConfigurableModuleClass } =
         providers: [
           ...(definitions.providers || []),
           {
-            provide: TransactionManager.name,
+            provide: TransactionManager,
             useClass: TransactionManagerAdapter,
           },
         ],
-        exports: [...(definitions.exports || []), TransactionManager.name],
+        exports: [...(definitions.exports || []), TransactionManager],
       };
     })
     .build();

@@ -1,11 +1,10 @@
 import { ContextService } from '@fiap-burger/setup';
 import { Injectable } from '@nestjs/common';
-import { randomUUID } from 'crypto';
 import { Transaction } from './transaction';
 
 @Injectable()
 export abstract class TransactionManager {
-  private readonly key: string = `${this.constructor.name}__${randomUUID()}`;
+  private readonly key: string = `${this.constructor.name}}`;
 
   constructor(protected readonly context: ContextService) {}
 
@@ -27,6 +26,7 @@ export abstract class TransactionManager {
 
   async commitTransaction(): Promise<void> {
     const transaction = this.getRunningTransactionOrFail();
+
     await transaction.commit();
     await transaction.end();
   }
