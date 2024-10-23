@@ -8,34 +8,29 @@ import { TransactionManager } from './transaction.manager';
 
 export type TransactionalModuleOptions = object;
 export type TransactionalModuleExtraOptions = {
-  connectionName?: string;
   TransactionManagerAdapter: Type<TransactionManager>;
 };
 
-const { ConfigurableModuleClass } = new ConfigurableModuleBuilder<
-  TransactionalModuleOptions,
-  'forFeature',
-  'createTransactionalOptions',
-  TransactionalModuleExtraOptions
->()
-  .setFactoryMethodName('forFeature')
-  .setFactoryMethodName('createTransactionalOptions')
-  .setExtras(null, (definitions, extras: TransactionalModuleExtraOptions) => {
-    const { TransactionManagerAdapter } = extras;
-    return {
-      global: true,
-      ...definitions,
-      providers: [
-        ...(definitions.providers || []),
-        {
-          provide: TransactionManager.name,
-          useClass: TransactionManagerAdapter,
-        },
-      ],
-      exports: [...(definitions.exports || []), TransactionManager.name],
-    };
-  })
-  .build();
+const { ConfigurableModuleClass } =
+  new ConfigurableModuleBuilder<TransactionalModuleOptions>()
+    .setClassMethodName('forFeature')
+    .setFactoryMethodName('createTransactionalOptions')
+    .setExtras(null, (definitions, extras: TransactionalModuleExtraOptions) => {
+      const { TransactionManagerAdapter } = extras;
+      return {
+        global: true,
+        ...definitions,
+        providers: [
+          ...(definitions.providers || []),
+          {
+            provide: TransactionManager.name,
+            useClass: TransactionManagerAdapter,
+          },
+        ],
+        exports: [...(definitions.exports || []), TransactionManager.name],
+      };
+    })
+    .build();
 
 @Global()
 @Module({})

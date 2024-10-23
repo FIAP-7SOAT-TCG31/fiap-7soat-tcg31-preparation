@@ -1,5 +1,6 @@
 import { ContextService } from '@fiap-burger/setup';
 import { Injectable } from '@nestjs/common';
+import { InjectConnection } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import { Transaction, TransactionManager } from '../../core';
 import { MongooseTransaction } from './mongoose.transaction';
@@ -8,6 +9,7 @@ import { MongooseTransaction } from './mongoose.transaction';
 export class MongooseTransactionManager extends TransactionManager {
   constructor(
     protected readonly context: ContextService,
+    @InjectConnection()
     protected readonly connection: Connection,
   ) {
     super(context);
