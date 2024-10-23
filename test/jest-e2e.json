@@ -12,6 +12,8 @@
   },
   "moduleNameMapper": {
     "@fiap-burger/setup/(.*)": "<rootDir>/../libs/setup/src/$1",
-    "@fiap-burger/setup": "<rootDir>/../libs/setup/src"
+    "@fiap-burger/setup": "<rootDir>/../libs/setup/src",
+    "@fiap-burger/tactical-design/(.*)": "<rootDir>/../libs/tactical-design/src/$1",
+    "@fiap-burger/tactical-design": "<rootDir>/../libs/tactical-design/src"
   }
 }
