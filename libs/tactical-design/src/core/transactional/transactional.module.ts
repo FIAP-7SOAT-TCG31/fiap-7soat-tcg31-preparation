@@ -1,15 +1,29 @@
-import { ConfigurableModuleBuilder, Module, Type } from '@nestjs/common';
+import {
+  ConfigurableModuleBuilder,
+  Global,
+  Module,
+  Type,
+} from '@nestjs/common';
 import { TransactionManager } from './transaction.manager';
 
+export type TransactionalModuleOptions = object;
 export type TransactionalModuleExtraOptions = {
+  connectionName?: string;
   TransactionManagerAdapter: Type<TransactionManager>;
 };
 
-const { ConfigurableModuleClass } = new ConfigurableModuleBuilder<any>()
+const { ConfigurableModuleClass } = new ConfigurableModuleBuilder<
+  TransactionalModuleOptions,
+  'forFeature',
+  'createTransactionalOptions',
+  TransactionalModuleExtraOptions
+>()
+  .setFactoryMethodName('forFeature')
   .setFactoryMethodName('createTransactionalOptions')
   .setExtras(null, (definitions, extras: TransactionalModuleExtraOptions) => {
     const { TransactionManagerAdapter } = extras;
     return {
+      global: true,
       ...definitions,
       providers: [
         ...(definitions.providers || []),
@@ -23,5 +37,6 @@ const { ConfigurableModuleClass } = new ConfigurableModuleBuilder<any>()
   })
   .build();
 
+@Global()
 @Module({})
 export class TransactionalModule extends ConfigurableModuleClass {}
