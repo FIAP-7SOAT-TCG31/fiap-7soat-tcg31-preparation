@@ -1,10 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "apps/fiap-burger-payments/src",
   "compilerOptions": {
     "deleteOutDir": true,
-    "webpack": true
+    "webpack": true,
+    "tsConfigPath": "apps/fiap-burger-payments/tsconfig.app.json"
   },
   "projects": {
     "setup": {
@@ -24,6 +25,17 @@
       "compilerOptions": {
         "tsConfigPath": "libs/tactical-design/tsconfig.lib.json"
       }
+    },
+    "fiap-burger-payments": {
+      "type": "application",
+      "root": "apps/fiap-burger-payments",
+      "entryFile": "main",
+      "sourceRoot": "apps/fiap-burger-payments/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/fiap-burger-payments/tsconfig.app.json"
+      }
     }
-  }
+  },
+  "monorepo": true,
+  "root": "apps/fiap-burger-payments"
 }

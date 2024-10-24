@@ -7,17 +7,20 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"libs/**/*.ts\"",
+    "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/apps/fiap-burger-payments/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test": "jest --config ./test/config/jest-unit.js",
+    "test:cov": "jest --coverage --config ./test/config/jest-unit.js",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand --config ./test/config/jest-all",
+    "test:watch": "jest --watch --config ./test/config/jest-unit.js",
+    "test:integration": "jest --config ./test/config/jest-integration.js",
+    "test:integration:cov": "jest --config ./test/config/jest-integration.js --coverage",
+    "test:all": "jest --config ./test/config/jest-all.js",
+    "test:all:cov": "jest --config ./test/config/jest-all.js --coverage"
   },
   "dependencies": {
     "@nestjs/axios": "^3.1.0",
@@ -80,14 +83,22 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "./coverage",
+    "coverageThreshold": {
+      "global": {
+        "lines": 70,
+        "branches": 70
+      }
+    },
     "testEnvironment": "node",
     "roots": [
-      "<rootDir>/src/",
-      "<rootDir>/libs/"
+      "<rootDir>/libs/",
+      "<rootDir>/apps/"
     ],
     "moduleNameMapper": {
       "^@fiap-burger/setup(|/.*)$": "<rootDir>/libs/setup/src/$1",
-      "^@fiap-burger/tactical-design(|/.*)$": "<rootDir>/libs/tactical-design/src/$1"
+      "^@fiap-burger/tactical-design(|/.*)$": "<rootDir>/libs/tactical-design/src/$1",
+      "^@fiap-burger/test-factory(|/.*)$": "<rootDir>/test/libs/test-factory/src/$1",
+      "^@fiap-burger/acceptance-factory(|/.*)$": "<rootDir>/test/libs/acceptance-factory/src/$1"
     }
   }
 }
