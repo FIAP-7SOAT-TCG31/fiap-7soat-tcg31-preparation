@@ -20,7 +20,8 @@
     "test:integration": "jest --config ./test/config/jest-integration.js",
     "test:integration:cov": "jest --config ./test/config/jest-integration.js --coverage",
     "test:all": "jest --config ./test/config/jest-all.js",
-    "test:all:cov": "jest --config ./test/config/jest-all.js --coverage"
+    "test:all:cov": "jest --config ./test/config/jest-all.js --coverage",
+    "test:acceptance": "cucumber-js -c ./test/config/cucumber.js"
   },
   "dependencies": {
     "@nestjs/axios": "^3.1.0",
@@ -45,6 +46,8 @@
     "winston": "^3.15.0"
   },
   "devDependencies": {
+    "@cucumber/cucumber": "^11.0.1",
+    "@cucumber/pretty-formatter": "^1.0.1",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
