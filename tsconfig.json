@@ -18,17 +18,15 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@fiap-burger/setup": [
-        "libs/setup/src"
-      ],
-      "@fiap-burger/setup/*": [
-        "libs/setup/src/*"
-      ],
-      "@fiap-burger/tactical-design": [
-        "libs/tactical-design/src"
-      ],
-      "@fiap-burger/tactical-design/*": [
-        "libs/tactical-design/src/*"
+      "@fiap-burger/setup": ["libs/setup/src"],
+      "@fiap-burger/setup/*": ["libs/setup/src/*"],
+      "@fiap-burger/tactical-design": ["libs/tactical-design/src"],
+      "@fiap-burger/tactical-design/*": ["libs/tactical-design/src/*"],
+      "@fiap-burger/test-factory": ["test/libs/test-factory/src"],
+      "@fiap-burger/test-factory/*": ["test/libs/test-factory/src/*"],
+      "@fiap-burger/acceptance-factory": ["test/libs/acceptance-factory/src"],
+      "@fiap-burger/acceptance-factory/*": [
+        "test/libs/acceptance-factory/src/*"
       ]
     }
   }
