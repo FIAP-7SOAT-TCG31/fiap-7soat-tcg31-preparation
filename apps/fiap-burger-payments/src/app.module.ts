@@ -1,5 +1,7 @@
 import { CommonModule, ContextModule } from '@fiap-burger/setup';
+import { TacticalDesignModule } from '@fiap-burger/tactical-design/core';
 import { MongooseTransactionalModule } from '@fiap-burger/tactical-design/mongoose';
+import { MongooseTacticalDesignModule } from '@fiap-burger/tactical-design/mongoose/core/tactical-design.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -15,6 +17,8 @@ import { PaymentModule } from './payment/payment.module';
     ContextModule.forRoot({}),
     CommonModule.forRootAsync({ useClass: AppConfig }),
     MongooseModule.forRootAsync({ useClass: MongooseConfig }),
+    TacticalDesignModule,
+    MongooseTacticalDesignModule,
     MongooseTransactionalModule,
     PaymentModule,
   ],

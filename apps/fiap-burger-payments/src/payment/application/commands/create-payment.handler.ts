@@ -15,9 +15,8 @@ export class CreatePaymentHandler
   @Transactional()
   async execute({ data }: CreatePaymentCommand): Promise<CreatePaymentResult> {
     const payment = await this.paymentFactory.create(data.type, data.amount);
-    if (1 == 1) {
-      throw new Error('Intentional Error');
-    }
+
+    await payment.commit();
     return new CreatePaymentResult({ id: payment.id });
   }
 }
