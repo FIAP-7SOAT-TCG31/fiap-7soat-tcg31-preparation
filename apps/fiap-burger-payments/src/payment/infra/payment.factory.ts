@@ -13,8 +13,9 @@ export class MongoosePaymentFactory implements PaymentFactory {
       new Types.ObjectId().toHexString(),
       type,
       amount,
-      'Created',
+      'draft',
     );
+    payment.create();
     await this.paymentRepository.create(payment);
     return payment;
   }

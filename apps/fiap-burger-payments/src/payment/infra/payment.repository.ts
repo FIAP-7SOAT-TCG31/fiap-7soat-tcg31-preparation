@@ -1,4 +1,7 @@
-import { TransactionManager } from '@fiap-burger/tactical-design/core';
+import {
+  AggregateMergeContext,
+  TransactionManager,
+} from '@fiap-burger/tactical-design/core';
 import { MongooseRepository } from '@fiap-burger/tactical-design/mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -17,7 +20,8 @@ export class MongoosePaymentRepository extends MongooseRepository<
     @InjectModel(MongoosePaymentSchema.name)
     protected readonly paymentModel: Model<MongoosePaymentSchema>,
     protected readonly paymentSchemaFactory: MongoosePaymentSchemaFactory,
+    protected readonly mergeContext: AggregateMergeContext,
   ) {
-    super(transactionManager, paymentModel, paymentSchemaFactory);
+    super(mergeContext, transactionManager, paymentModel, paymentSchemaFactory);
   }
 }

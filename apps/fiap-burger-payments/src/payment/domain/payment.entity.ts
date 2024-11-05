@@ -1,11 +1,12 @@
-import { Entity } from '@fiap-burger/tactical-design/core';
+import { AggregateRoot } from '@fiap-burger/tactical-design/core';
+import { PaymentCreated } from './events/payment.created';
 
-export class Payment extends Entity {
+export class Payment extends AggregateRoot {
   constructor(
     protected readonly _id: string,
     private readonly _type: string,
     private readonly _amount: number,
-    private readonly _status: string,
+    private _status: string,
   ) {
     super(_id);
   }
@@ -20,5 +21,13 @@ export class Payment extends Entity {
 
   get status() {
     return this._status;
+  }
+
+  create() {
+    this.apply(new PaymentCreated(this.id, this.type, this.amount));
+  }
+
+  onPaymentCreated() {
+    this._status = 'created';
   }
 }

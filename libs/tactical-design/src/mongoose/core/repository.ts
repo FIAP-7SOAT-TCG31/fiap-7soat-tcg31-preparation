@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ClientSession, FilterQuery, Model, Types } from 'mongoose';
 import {
+  AggregateMergeContext,
+  AggregateRoot,
   Entity,
   EntitySchemaFactory,
   Repository,
@@ -15,6 +17,7 @@ export abstract class MongooseRepository<
 > implements Repository<TEntity>
 {
   constructor(
+    protected readonly mergeContext: AggregateMergeContext,
     protected readonly transactionManager: TransactionManager,
     protected readonly entityModel: Model<TSchema>,
     protected readonly entitySchemaFactory: EntitySchemaFactory<
@@ -33,6 +36,13 @@ export abstract class MongooseRepository<
     return this.find({});
   }
 
+  private merge(entity: TEntity) {
+    if (entity instanceof AggregateRoot) {
+      this.mergeContext.mergeObjectContext(entity);
+    }
+    return entity;
+  }
+
   protected async find(
     entityFilterQuery?: FilterQuery<TSchema>,
   ): Promise<TEntity[]> {
@@ -40,7 +50,7 @@ export abstract class MongooseRepository<
       .find(entityFilterQuery, {}, { lean: true })
       .exec();
     return schemas.map((schema) =>
-      this.entitySchemaFactory.schemaToEntity(schema as TSchema),
+      this.merge(this.entitySchemaFactory.schemaToEntity(schema as TSchema)),
     );
   }
 
@@ -48,6 +58,7 @@ export abstract class MongooseRepository<
     const session = this.getSession();
     const schema = this.entitySchemaFactory.entityToSchema(entity);
     await new this.entityModel(schema).save({ session });
+    this.merge(entity);
   }
 
   async update(entity: TEntity): Promise<void> {
@@ -67,7 +78,9 @@ export abstract class MongooseRepository<
       return;
     }
 
-    return this.entitySchemaFactory.schemaToEntity(schema as TSchema);
+    return this.merge(
+      this.entitySchemaFactory.schemaToEntity(schema as TSchema),
+    );
   }
 
   protected getSession(): ClientSession | undefined {
