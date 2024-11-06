@@ -30,7 +30,7 @@ export class MongooseEventRepository<
 
   async create(event: TEvent): Promise<void> {
     const session = this.getSession();
-    (event as any).id = new Types.ObjectId();
+    (event as any).id = new Types.ObjectId().toHexString();
     const schema = this.toSchema(event);
     await new this.eventModel(schema).save({ session });
   }
