@@ -1,5 +1,6 @@
 import { AmqpModule } from '@fiap-burger/amqp';
 import { CommonModule, ContextModule } from '@fiap-burger/setup';
+import { AmqpTacticalDesignModule } from '@fiap-burger/tactical-design/amqp';
 import { TacticalDesignModule } from '@fiap-burger/tactical-design/core';
 import {
   MongooseTacticalDesignModule,
@@ -24,6 +25,7 @@ import { PaymentModule } from './payment/payment.module';
     AmqpModule.forRootAsync({ useClass: AmqpConfig }),
     TacticalDesignModule,
     MongooseTacticalDesignModule,
+    AmqpTacticalDesignModule,
     MongooseTransactionalModule,
     PaymentModule,
   ],
