@@ -47,7 +47,7 @@ export abstract class AggregateRoot extends Entity {
   private readonly _contexts: AggregateContext[] = [];
   private readonly _events: AggregateEvent[] = [];
 
-  get aggregateVersion() {
+  get version() {
     return this._version;
   }
 
