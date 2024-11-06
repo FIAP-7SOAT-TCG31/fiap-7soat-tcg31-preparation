@@ -1,5 +1,5 @@
+import { AmqpModule } from '@fiap-burger/amqp';
 import { CommonModule, ContextModule } from '@fiap-burger/setup';
-import { AmqpModule } from '@fiap-burger/tactical-design/amqp';
 import { TacticalDesignModule } from '@fiap-burger/tactical-design/core';
 import {
   MongooseTacticalDesignModule,

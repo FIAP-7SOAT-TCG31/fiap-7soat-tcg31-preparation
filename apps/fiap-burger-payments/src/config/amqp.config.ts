@@ -1,7 +1,4 @@
-import {
-  AmqpModuleOptions,
-  AmqpOptionsFactory,
-} from '@fiap-burger/tactical-design/amqp';
+import { AmqpModuleOptions, AmqpOptionsFactory } from '@fiap-burger/amqp';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 

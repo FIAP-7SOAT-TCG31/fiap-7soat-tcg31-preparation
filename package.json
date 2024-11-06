@@ -103,7 +103,8 @@
       "^@fiap-burger/setup(|/.*)$": "<rootDir>/libs/setup/src/$1",
       "^@fiap-burger/tactical-design(|/.*)$": "<rootDir>/libs/tactical-design/src/$1",
       "^@fiap-burger/test-factory(|/.*)$": "<rootDir>/test/libs/test-factory/src/$1",
-      "^@fiap-burger/acceptance-factory(|/.*)$": "<rootDir>/test/libs/acceptance-factory/src/$1"
+      "^@fiap-burger/acceptance-factory(|/.*)$": "<rootDir>/test/libs/acceptance-factory/src/$1",
+      "^@fiap-burger/amqp(|/.*)$": "<rootDir>/libs/amqp/src/$1"
     }
   }
 }
