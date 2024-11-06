@@ -1,4 +1,5 @@
 import { CommonModule, ContextModule } from '@fiap-burger/setup';
+import { AmqpModule } from '@fiap-burger/tactical-design/amqp';
 import { TacticalDesignModule } from '@fiap-burger/tactical-design/core';
 import {
   MongooseTacticalDesignModule,
@@ -9,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AmqpConfig } from './config/amqp.config';
 import { AppConfig } from './config/app.config';
 import { MongooseConfig } from './config/mongoose.config';
 import { PaymentModule } from './payment/payment.module';
@@ -19,6 +21,7 @@ import { PaymentModule } from './payment/payment.module';
     ContextModule.forRoot({}),
     CommonModule.forRootAsync({ useClass: AppConfig }),
     MongooseModule.forRootAsync({ useClass: MongooseConfig }),
+    AmqpModule.forRootAsync({ useClass: AmqpConfig }),
     TacticalDesignModule,
     MongooseTacticalDesignModule,
     MongooseTransactionalModule,

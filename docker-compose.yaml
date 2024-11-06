@@ -26,3 +26,16 @@ services:
           }
         ]
       })' && if [ $(mongosh -u fiapburger -p fiapburger --quiet --host mongodb:27017 --eval 'rs.status().ok') -eq 1 ]; then exit 0; else exit 1; fi"
+  rabbitmq:
+    image: fiapburger/rabbitmq:3-management-delayed
+    build:
+      context: ./localstack
+      dockerfile: ./Dockerfile.rabbitmq
+    container_name: fiapburger-rabbitmq
+    hostname: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: 'fiapburger'
+      RABBITMQ_DEFAULT_PASS: 'fiapburger'
+    ports:
+      - 5672:5672
+      - 15672:15672
