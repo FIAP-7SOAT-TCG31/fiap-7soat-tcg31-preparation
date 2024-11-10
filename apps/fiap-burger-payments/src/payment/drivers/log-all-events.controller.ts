@@ -14,6 +14,6 @@ export class LogAllEventsController {
     maxDelay: 5000,
   })
   async execute(@Body() data: any) {
-    console.log(JSON.stringify({ message: 'got through here', data }, null, 2));
+    console.log(JSON.stringify({ message: 'got a message', data }, null, 2));
   }
 }

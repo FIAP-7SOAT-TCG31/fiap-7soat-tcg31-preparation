@@ -19,7 +19,6 @@ export class AmqpPublisherContext implements AggregatePublisherContext {
 
   async commit(...events: AggregateEvent[]) {
     const eventBusName = `${toDottedNotation(this.config.appName)}.events`;
-    console.log({ eventBusName });
     await Promise.all(
       events.map((x) =>
         this.amqp.publish(
