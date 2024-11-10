@@ -33,14 +33,11 @@ export abstract class AggregatePublisherContext implements AggregateContext {
 export class AggregateMergeContext {
   constructor(
     private readonly persistance: AggregatePersistanceContext,
-    // private readonly publisher: AggregatePublisherContext,
+    private readonly publisher: AggregatePublisherContext,
   ) {}
 
   mergeObjectContext<T extends AggregateRoot>(object: T) {
-    object['_contexts'].push(
-      this.persistance,
-      // this.publisher
-    );
+    object['_contexts'].push(this.persistance, this.publisher);
     return object;
   }
 }
@@ -50,7 +47,7 @@ export abstract class AggregateRoot extends Entity {
   private readonly _contexts: AggregateContext[] = [];
   private readonly _events: AggregateEvent[] = [];
 
-  get aggregateVersion() {
+  get version() {
     return this._version;
   }
 
