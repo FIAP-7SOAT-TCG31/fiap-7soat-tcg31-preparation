@@ -4,7 +4,7 @@ import {
 } from '@fiap-burger/tactical-design/core';
 import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
-import { Payment } from '../../domain/payment.entity';
+import { Payment } from '../../../domain/payment.entity';
 import { MongoosePaymentSchema } from './payment.schema';
 
 @Injectable()

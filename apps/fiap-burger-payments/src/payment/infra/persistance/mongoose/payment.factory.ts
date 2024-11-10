@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
-import { PaymentFactory } from '../../application/abstractions/payment.factory';
-import { PaymentRepository } from '../../application/abstractions/payment.repository';
-import { Payment } from '../../domain/payment.entity';
+import { PaymentFactory } from '../../../application/abstractions/payment.factory';
+import { PaymentRepository } from '../../../application/abstractions/payment.repository';
+import { Payment } from '../../../domain/payment.entity';
 
 @Injectable()
 export class MongoosePaymentFactory implements PaymentFactory {

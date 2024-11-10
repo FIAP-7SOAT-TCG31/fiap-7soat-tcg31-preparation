@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PaymentFactory } from '../application/abstractions/payment.factory';
 import { PaymentRepository } from '../application/abstractions/payment.repository';
-import { MongoosePaymentSchemaFactory } from './persistance/payment-schema.factory';
-import { MongoosePaymentFactory } from './persistance/payment.factory';
-import { MongoosePaymentRepository } from './persistance/payment.repository';
+import { MongoosePaymentSchemaFactory } from './persistance/mongoose/payment-schema.factory';
+import { MongoosePaymentFactory } from './persistance/mongoose/payment.factory';
+import { MongoosePaymentRepository } from './persistance/mongoose/payment.repository';
 import {
   MongoosePaymentSchema,
   MongoosePaymentSchemaModel,
-} from './persistance/payment.schema';
+} from './persistance/mongoose/payment.schema';
 
 @Module({
   imports: [
