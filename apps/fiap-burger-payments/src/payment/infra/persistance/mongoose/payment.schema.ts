@@ -4,13 +4,16 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 @Schema({ _id: false })
 export class MongoosePaymentInstructionSchema {
   @Prop()
+  conciliationId: string;
+
+  @Prop()
   type: string;
 
   @Prop()
   content: string;
 }
 
-@Schema({ collection: 'Payments' })
+@Schema({ collection: 'Payments', timestamps: true })
 export class MongoosePaymentSchema extends MongooseEntitySchema {
   @Prop()
   amount: number;

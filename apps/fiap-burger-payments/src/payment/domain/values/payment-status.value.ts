@@ -34,7 +34,7 @@ export abstract class PaymentStatus {
 }
 
 class DraftedPaymentStatus extends PaymentStatus {
-  protected readonly _value = EPaymentStatus.Created;
+  protected readonly _value = EPaymentStatus.Drafted;
 
   create(): PaymentStatus {
     return new CreatedPaymentStatus();

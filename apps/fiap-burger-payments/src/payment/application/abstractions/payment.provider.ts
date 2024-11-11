@@ -1,6 +1,6 @@
 export abstract class PaymentProvider {
-  abstract createPixQRCode(
-    conciliationId: string,
-    amount: number,
-  ): Promise<string>;
+  abstract createPixQRCode(amount: number): Promise<{
+    conciliationId: string;
+    content: string;
+  }>;
 }

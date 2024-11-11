@@ -7,13 +7,17 @@ const MAPPINGS = {
 type PaymentInstructionFactoryInput = 'PixQRCode';
 
 export class PaymentInstructionFactory {
-  static create(type: PaymentInstructionFactoryInput, content: string) {
+  static create(
+    type: PaymentInstructionFactoryInput,
+    content: string,
+    conciliationId: string,
+  ) {
     const PaymentInstruction = MAPPINGS[type];
 
     if (!PaymentInstruction) {
       throw new Error(`Missing payment instruction ${type}`);
     }
 
-    return new PaymentInstruction(content);
+    return new PaymentInstruction(conciliationId, content);
   }
 }

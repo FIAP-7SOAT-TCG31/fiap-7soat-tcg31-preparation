@@ -1,13 +1,19 @@
 import { Injectable } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { PaymentProvider } from '../../../application/abstractions/payment.provider';
 import PIX from './pix';
 
 @Injectable()
 export class FakePixService implements PaymentProvider {
+  private generateConciliationId() {
+    const [, baseId] = randomUUID().split('-');
+    const timestamp = new Date().toISOString().replace(/\D/g, '').slice(0, 16);
+    return `${timestamp}${baseId}`;
+  }
   async createPixQRCode(
-    conciliationId: string,
     amount: number,
-  ): Promise<string> {
+  ): Promise<{ conciliationId: string; content: string }> {
+    const conciliationId = this.generateConciliationId();
     const transaction = new PIX({
       pixkey: 'payments@fiapburger.com.br',
       merchant: 'Fiap Burger',
@@ -16,6 +22,9 @@ export class FakePixService implements PaymentProvider {
       amount,
     });
 
-    return transaction.payload();
+    return {
+      conciliationId,
+      content: transaction.payload(),
+    };
   }
 }

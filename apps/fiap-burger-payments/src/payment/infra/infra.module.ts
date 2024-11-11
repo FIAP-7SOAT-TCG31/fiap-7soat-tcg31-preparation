@@ -46,6 +46,6 @@ import { MercadoPagoService } from './providers/mercadopago/mercado-pago.service
       useClass: MongoosePaymentRepository,
     },
   ],
-  exports: [PaymentFactory, PaymentRepository],
+  exports: [PaymentFactory, PaymentRepository, PaymentProvider],
 })
 export class InfraModule {}

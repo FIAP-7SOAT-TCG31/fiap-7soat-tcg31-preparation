@@ -28,6 +28,7 @@ export class MongoosePaymentSchemaFactory
       type: entity.type,
       paymentInstruction: instruction
         ? {
+            conciliationId: instruction.conciliationId,
             content: instruction.content,
             type: instruction.type,
           }
@@ -47,6 +48,7 @@ export class MongoosePaymentSchemaFactory
           ? PaymentInstructionFactory.create(
               instruction.type as any,
               instruction.content,
+              instruction.conciliationId,
             )
           : null,
       ),

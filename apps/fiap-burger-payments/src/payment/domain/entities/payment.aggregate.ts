@@ -3,6 +3,7 @@ import { PaymentApproved } from '../events/payment.approved';
 import { PaymentCreated } from '../events/payment.created';
 import { PaymentDrafted } from '../events/payment.drafted';
 import { PaymentRejected } from '../events/payment.rejected';
+import { PaymentInstructionFactory } from '../factories/payment-instruction.factory';
 import { PaymentInstruction } from '../values/payment-instruction.value';
 import {
   PaymentStatus,
@@ -16,7 +17,7 @@ export class Payment extends AggregateRoot {
     private readonly _amount: number,
     private readonly _type: PaymentType,
     private _status: PaymentStatus,
-    private readonly _paymentInstruction: PaymentInstruction,
+    private _paymentInstruction: PaymentInstruction,
   ) {
     super(_id);
   }
@@ -45,11 +46,16 @@ export class Payment extends AggregateRoot {
     this._status = PaymentStatusFactory.draft();
   }
 
-  create() {
-    this.apply(new PaymentCreated(this._type, this.amount));
+  create(content: string, conciliationId: string) {
+    this.apply(new PaymentCreated(conciliationId, content));
   }
 
-  onPaymentCreated() {
+  onPaymentCreated({ content, conciliationId }: PaymentCreated) {
+    this._paymentInstruction = PaymentInstructionFactory.create(
+      'PixQRCode',
+      content,
+      conciliationId,
+    );
     this._status = this._status.create();
   }
 
