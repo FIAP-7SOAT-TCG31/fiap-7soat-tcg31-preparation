@@ -1,7 +1,4 @@
-import {
-  AggregateMergeContext,
-  EntitySchemaFactory,
-} from '@fiap-burger/tactical-design/core';
+import { EntitySchemaFactory } from '@fiap-burger/tactical-design/core';
 import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { Payment } from '../../../domain/entities/payment.aggregate';
@@ -17,8 +14,6 @@ import { MongoosePaymentSchema } from './payment.schema';
 export class MongoosePaymentSchemaFactory
   implements EntitySchemaFactory<MongoosePaymentSchema, Payment>
 {
-  constructor(private readonly mergeContext: AggregateMergeContext) {}
-
   entityToSchema(entity: Payment): MongoosePaymentSchema {
     const instruction = entity.paymentInstruction;
     return {
@@ -40,22 +35,20 @@ export class MongoosePaymentSchemaFactory
 
   schemaToEntity(entitySchema: MongoosePaymentSchema): Payment {
     const instruction = entitySchema.paymentInstruction;
-    return this.mergeContext.mergeObjectContext(
-      new Payment(
-        entitySchema._id.toHexString(),
-        entitySchema.amount,
-        entitySchema.type as PaymentType,
-        PaymentStatusFactory.create(entitySchema.status as PaymentStatusValues),
-        instruction
-          ? PaymentInstructionFactory.create(
-              instruction.type as any,
-              instruction.content,
-              instruction.conciliationId,
-            )
-          : null,
-        entitySchema.approvedAt,
-        entitySchema.rejectedAt,
-      ),
+    return new Payment(
+      entitySchema._id.toHexString(),
+      entitySchema.amount,
+      entitySchema.type as PaymentType,
+      PaymentStatusFactory.create(entitySchema.status as PaymentStatusValues),
+      instruction
+        ? PaymentInstructionFactory.create(
+            instruction.type as any,
+            instruction.content,
+            instruction.conciliationId,
+          )
+        : null,
+      entitySchema.approvedAt,
+      entitySchema.rejectedAt,
     );
   }
 }
