@@ -1,6 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { PaymentRepository } from '../abstractions/payment.repository';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
+import { MongoosePaymentSchema } from '../../infra/persistance/mongoose/payment.schema';
 import { Payment } from '../dtos/payment.dto';
 import {
   GetPaymentByIdQuery,
@@ -11,10 +13,16 @@ import {
 export class GetPaymentByIdHandler
   implements IQueryHandler<GetPaymentByIdQuery, GetPaymentByIdResult>
 {
-  constructor(private readonly repository: PaymentRepository) {}
+  constructor(
+    @InjectModel(MongoosePaymentSchema.name)
+    private readonly queryModel: Model<MongoosePaymentSchema>,
+  ) {}
 
   async execute({ id }: GetPaymentByIdQuery): Promise<GetPaymentByIdResult> {
-    const result = await this.repository.findById(id);
+    const result = await this.queryModel
+      .findById(new Types.ObjectId(id))
+      .exec();
+
     if (!result) {
       throw new NotFoundException();
     }
@@ -23,14 +31,14 @@ export class GetPaymentByIdHandler
       new Payment({
         id: result.id,
         amount: result.amount,
-        status: result.status,
-        type: result.type,
+        status: result.status as any,
+        type: result.type as any,
         conciliationId: result.paymentInstruction?.conciliationId,
         content: result.paymentInstruction?.content,
         approvedAt: result.approvedAt,
         rejectedAt: result.rejectedAt,
-        // createdAt: result.createdAt,
-        // updatedAt: result.updatedAt,
+        createdAt: result.createdAt,
+        updatedAt: result.updatedAt,
       }),
     );
   }

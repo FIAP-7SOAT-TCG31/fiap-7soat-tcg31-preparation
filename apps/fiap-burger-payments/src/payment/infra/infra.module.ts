@@ -14,15 +14,17 @@ import {
 import { FakePixService } from './providers/fake-pix/fake-pix.service';
 import { MercadoPagoService } from './providers/mercadopago/mercado-pago.service';
 
+const MongooseSchemaModule = MongooseModule.forFeature([
+  {
+    name: MongoosePaymentSchema.name,
+    schema: MongoosePaymentSchemaModel,
+  },
+]);
+
+MongooseSchemaModule.global = true;
+
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      {
-        name: MongoosePaymentSchema.name,
-        schema: MongoosePaymentSchemaModel,
-      },
-    ]),
-  ],
+  imports: [MongooseSchemaModule],
   providers: [
     MongoosePaymentSchemaFactory,
     {

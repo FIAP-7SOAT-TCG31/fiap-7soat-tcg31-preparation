@@ -24,11 +24,11 @@ export class Payment {
   @ApiPropertyOptional()
   public readonly content?: string;
 
-  // @ApiProperty()
-  // public readonly createdAt: Date;
+  @ApiProperty()
+  public readonly createdAt: Date;
 
-  // @ApiPropertyOptional()
-  // public readonly updatedAt?: Date;
+  @ApiPropertyOptional()
+  public readonly updatedAt?: Date;
 
   @ApiPropertyOptional()
   public readonly approvedAt?: Date;
@@ -43,8 +43,8 @@ export class Payment {
     status,
     conciliationId,
     content,
-    // createdAt,
-    // updatedAt,
+    createdAt,
+    updatedAt,
     approvedAt,
     rejectedAt,
   }: Payment) {
@@ -54,8 +54,8 @@ export class Payment {
     this.status = status;
     this.conciliationId = conciliationId;
     this.content = content;
-    // this.createdAt = createdAt;
-    // this.updatedAt = updatedAt;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
     this.approvedAt = approvedAt;
     this.rejectedAt = rejectedAt;
   }
