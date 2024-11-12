@@ -10,7 +10,7 @@ import { StatusTransitionException } from '../errors/status-transition.exception
 export type PaymentStatusValues = `${EPaymentStatus}`;
 
 export abstract class PaymentStatus {
-  protected abstract readonly _value: string;
+  protected abstract readonly _value: PaymentStatusValues;
 
   get value() {
     return this._value;

@@ -8,7 +8,6 @@ import { PaymentInstruction } from '../values/payment-instruction.value';
 import {
   PaymentStatus,
   PaymentStatusFactory,
-  PaymentStatusValues,
 } from '../values/payment-status.value';
 import { PaymentType } from '../values/payment.types';
 
@@ -33,7 +32,7 @@ export class Payment extends AggregateRoot {
     return this._type;
   }
 
-  get status(): PaymentStatusValues {
+  get status() {
     return this._status.value;
   }
 
