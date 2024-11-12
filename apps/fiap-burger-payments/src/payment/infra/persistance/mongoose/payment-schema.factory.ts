@@ -33,6 +33,8 @@ export class MongoosePaymentSchemaFactory
             type: instruction.type,
           }
         : null,
+      approvedAt: entity.approvedAt,
+      rejectedAt: entity.rejectedAt,
     };
   }
 
@@ -51,6 +53,8 @@ export class MongoosePaymentSchemaFactory
               instruction.conciliationId,
             )
           : null,
+        entitySchema.approvedAt,
+        entitySchema.rejectedAt,
       ),
     );
   }

@@ -16,13 +16,10 @@ export class CreatePaymentHandler
   @Transactional()
   async execute({ id }: CreatePaymentCommand): Promise<void> {
     const payment = await this.repository.findById(id);
-
     const { conciliationId, content } =
       await this.paymentProvider.createPixQRCode(payment.amount);
     payment.create(content, conciliationId);
-
     await this.repository.update(payment);
-
     await payment.commit();
   }
 }

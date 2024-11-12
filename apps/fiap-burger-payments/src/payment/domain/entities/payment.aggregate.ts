@@ -18,6 +18,8 @@ export class Payment extends AggregateRoot {
     private readonly _type: PaymentType,
     private _status: PaymentStatus,
     private _paymentInstruction: PaymentInstruction,
+    private _approvedAt?: Date,
+    private _rejectedAt?: Date,
   ) {
     super(_id);
   }
@@ -36,6 +38,14 @@ export class Payment extends AggregateRoot {
 
   get paymentInstruction() {
     return this._paymentInstruction?.value;
+  }
+
+  get approvedAt() {
+    return this._approvedAt;
+  }
+
+  get rejectedAt() {
+    return this._rejectedAt;
   }
 
   draft() {
@@ -60,18 +70,20 @@ export class Payment extends AggregateRoot {
   }
 
   approve() {
-    this.apply(new PaymentApproved(this.id));
+    this.apply(new PaymentApproved());
   }
 
-  onPaymentApproved() {
+  onPaymentApproved({ approvedAt }: PaymentApproved) {
     this._status = this._status.approve();
+    this._approvedAt = approvedAt;
   }
 
   reject() {
-    this.apply(new PaymentRejected(this.id));
+    this.apply(new PaymentRejected());
   }
 
-  onPaymentRejected() {
+  onPaymentRejected({ rejectedAt }: PaymentRejected) {
+    this._rejectedAt = rejectedAt;
     this._status = this._status.reject();
   }
 }

@@ -26,6 +26,12 @@ export class MongoosePaymentSchema extends MongooseEntitySchema {
 
   @Prop({ schema: MongoosePaymentInstructionSchema })
   paymentInstruction: MongoosePaymentInstructionSchema;
+
+  @Prop()
+  approvedAt?: Date;
+
+  @Prop()
+  rejectedAt?: Date;
 }
 
 export const MongoosePaymentSchemaModel = SchemaFactory.createForClass(
