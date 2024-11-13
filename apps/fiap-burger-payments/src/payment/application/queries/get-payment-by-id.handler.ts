@@ -29,7 +29,7 @@ export class GetPaymentByIdHandler
 
     return new GetPaymentByIdResult(
       new Payment({
-        id: result.id,
+        id: result._id.toHexString(),
         amount: result.amount,
         status: result.status as any,
         type: result.type as any,

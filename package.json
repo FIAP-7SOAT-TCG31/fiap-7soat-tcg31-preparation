@@ -86,13 +86,16 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/apps/**/*.(t|j)s",
+      "!**/*.config.(t|j)s",
+      "!test/**",
+      "!**/*.(spec|test)(t|j)s"
     ],
     "coverageDirectory": "./coverage",
     "coverageThreshold": {
       "global": {
-        "lines": 70,
-        "branches": 70
+        "lines": 80,
+        "branches": 80
       }
     },
     "testEnvironment": "node",

@@ -1,5 +1,6 @@
 import { MongooseEntitySchema } from '@fiap-burger/tactical-design/mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { PaymentType } from '../../../domain/values/payment.types';
 
 @Schema({ _id: false })
 export class MongoosePaymentInstructionSchema {
@@ -21,8 +22,8 @@ export class MongoosePaymentSchema extends MongooseEntitySchema {
   @Prop()
   status: string;
 
-  @Prop()
-  type: string;
+  @Prop({ type: String })
+  type: PaymentType;
 
   @Prop({ schema: MongoosePaymentInstructionSchema })
   paymentInstruction: MongoosePaymentInstructionSchema;

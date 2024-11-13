@@ -1,89 +1,106 @@
-import { AggregateRoot } from '@fiap-burger/tactical-design/core';
+import { randomUUID } from 'crypto';
 import { PaymentApproved } from '../events/payment.approved';
 import { PaymentCreated } from '../events/payment.created';
 import { PaymentDrafted } from '../events/payment.drafted';
 import { PaymentRejected } from '../events/payment.rejected';
-import { PaymentInstructionFactory } from '../factories/payment-instruction.factory';
-import { PaymentInstruction } from '../values/payment-instruction.value';
 import {
-  PaymentStatus,
+  EPaymentStatus,
   PaymentStatusFactory,
 } from '../values/payment-status.value';
-import { PaymentType } from '../values/payment.types';
+import { Payment } from './payment.aggregate';
 
-export class Payment extends AggregateRoot {
-  constructor(
-    protected readonly _id: string,
-    private readonly _amount: number,
-    private readonly _type: PaymentType,
-    private _status: PaymentStatus,
-    private _paymentInstruction: PaymentInstruction,
-    private _approvedAt?: Date,
-    private _rejectedAt?: Date,
-  ) {
-    super(_id);
-  }
+const createSpyedTarget = () => {
+  const target = new Payment(
+    randomUUID(),
+    123,
+    'PixQRCode',
+    PaymentStatusFactory.draft(),
+    null,
+  );
 
-  get amount() {
-    return this._amount;
-  }
+  jest.spyOn(target as any, 'applyEvent');
+  return target;
+};
 
-  get type() {
-    return this._type;
-  }
+describe('Payment', () => {
+  beforeAll(() => {
+    jest.useFakeTimers();
+  });
 
-  get status() {
-    return this._status.value;
-  }
+  describe('.draft()', () => {
+    it('should draft payment', () => {
+      const target = createSpyedTarget();
+      target.draft();
 
-  get paymentInstruction() {
-    return this._paymentInstruction?.value;
-  }
+      expect((target as any).applyEvent).toHaveBeenCalledWith(
+        expect.objectContaining(new PaymentDrafted(target.type, target.amount)),
+      );
+    });
+  });
 
-  get approvedAt() {
-    return this._approvedAt;
-  }
+  describe('.create()', () => {
+    it('should transition payment to created status', () => {
+      const target = createSpyedTarget();
+      target.draft();
+      const conciliationId = randomUUID();
+      const content = randomUUID();
+      target.create(content, conciliationId);
 
-  get rejectedAt() {
-    return this._rejectedAt;
-  }
+      expect((target as any).applyEvent).toHaveBeenCalledWith(
+        expect.objectContaining(new PaymentCreated(conciliationId, content)),
+      );
+      expect(target.status).toBe(EPaymentStatus.Created);
+      expect(target.paymentInstruction.conciliationId).toBe(conciliationId);
+      expect(target.paymentInstruction.content).toBe(content);
+    });
+  });
 
-  draft() {
-    this.apply(new PaymentDrafted(this._type, this.amount));
-  }
+  describe('.approve()', () => {
+    it('should transition payment to approved status', () => {
+      const target = createSpyedTarget();
+      target.draft();
+      const conciliationId = randomUUID();
+      const content = randomUUID();
+      target.create(content, conciliationId);
+      target.approve();
 
-  onPaymentDrafted() {
-    this._status = PaymentStatusFactory.draft();
-  }
+      expect((target as any).applyEvent).toHaveBeenCalledWith(
+        expect.objectContaining(new PaymentApproved()),
+      );
+      expect(target.status).toBe(EPaymentStatus.Approved);
+      expect(target.approvedAt).toBeDefined();
+    });
+  });
 
-  create(content: string, conciliationId: string) {
-    this.apply(new PaymentCreated(conciliationId, content));
-  }
+  describe('.reject()', () => {
+    it('should transition payment to rejected status', () => {
+      const target = createSpyedTarget();
+      target.draft();
+      const conciliationId = randomUUID();
+      const content = randomUUID();
+      target.create(content, conciliationId);
+      target.reject();
 
-  onPaymentCreated({ content, conciliationId }: PaymentCreated) {
-    this._paymentInstruction = PaymentInstructionFactory.create(
-      'PixQRCode',
-      content,
-      conciliationId,
-    );
-    this._status = this._status.create();
-  }
+      expect((target as any).applyEvent).toHaveBeenCalledWith(
+        expect.objectContaining(new PaymentRejected()),
+      );
+      expect(target.status).toBe(EPaymentStatus.Rejected);
+      expect(target.rejectedAt).toBeDefined();
+    });
+  });
+  describe('.approve()', () => {
+    it('should transition payment to approved status', () => {
+      const target = createSpyedTarget();
+      target.draft();
+      const conciliationId = randomUUID();
+      const content = randomUUID();
+      target.create(content, conciliationId);
+      target.approve();
 
-  approve() {
-    this.apply(new PaymentApproved());
-  }
-
-  onPaymentApproved({ approvedAt }: PaymentApproved) {
-    this._status = this._status.approve();
-    this._approvedAt = approvedAt;
-  }
-
-  reject() {
-    this.apply(new PaymentRejected());
-  }
-
-  onPaymentRejected({ rejectedAt }: PaymentRejected) {
-    this._rejectedAt = rejectedAt;
-    this._status = this._status.reject();
-  }
-}
+      expect((target as any).applyEvent).toHaveBeenCalledWith(
+        expect.objectContaining(new PaymentApproved()),
+      );
+      expect(target.status).toBe(EPaymentStatus.Approved);
+    });
+  });
+});
