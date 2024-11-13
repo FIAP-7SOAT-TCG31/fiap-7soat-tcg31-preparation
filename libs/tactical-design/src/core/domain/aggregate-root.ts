@@ -37,15 +37,20 @@ export class AggregateMergeContext {
   ) {}
 
   mergeObjectContext<T extends AggregateRoot>(object: T) {
-    object['_contexts'].push(this.persistance, this.publisher);
+    object['$registerContext'](this.persistance);
+    object['$registerContext'](this.publisher);
     return object;
   }
 }
 
 export abstract class AggregateRoot extends Entity {
   private _version: number;
-  private readonly _contexts: AggregateContext[] = [];
+  private readonly _contexts: Record<string, AggregateContext> = {};
   private readonly _events: AggregateEvent[] = [];
+
+  private $registerContext(context: AggregateContext) {
+    this._contexts[context.constructor.name] = context;
+  }
 
   get version() {
     return this._version;
@@ -61,7 +66,9 @@ export abstract class AggregateRoot extends Entity {
   }
 
   protected async commitAll(events: AggregateEvent[]): Promise<void> {
-    await Promise.all(this._contexts.map((x) => x.commit(...events)));
+    await Promise.all(
+      Object.values(this._contexts).map((x) => x.commit(...events)),
+    );
   }
 
   private resetEvents() {

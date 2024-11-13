@@ -1,3 +1,3 @@
-export class CreatePaymentCommand {
+export class RejectPaymentCommand {
   constructor(readonly id: string) {}
 }

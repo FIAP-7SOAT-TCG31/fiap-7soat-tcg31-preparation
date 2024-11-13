@@ -1,3 +1,3 @@
-export class CreatePaymentCommand {
+export class ApprovePaymentCommand {
   constructor(readonly id: string) {}
 }

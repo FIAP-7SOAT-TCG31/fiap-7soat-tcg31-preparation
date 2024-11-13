@@ -40,6 +40,7 @@
     "class-validator": "^0.14.1",
     "compression": "^1.7.4",
     "helmet": "^8.0.0",
+    "mercadopago": "^2.0.15",
     "mongoose": "^8.7.2",
     "nest-winston": "^1.9.7",
     "reflect-metadata": "^0.2.0",
