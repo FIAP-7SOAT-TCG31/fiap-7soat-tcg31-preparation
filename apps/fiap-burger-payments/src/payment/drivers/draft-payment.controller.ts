@@ -7,7 +7,7 @@ import {
 import { DraftPaymentInput } from '../application/dtos/draft-payment.input';
 
 @Controller({ version: '1', path: 'payments' })
-export class CreatePaymentController {
+export class DraftPaymentController {
   constructor(private readonly commandBus: CommandBus) {}
 
   @Post()
