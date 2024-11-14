@@ -9,7 +9,7 @@ import { Types } from 'mongoose';
 import { Payment } from '../../domain/entities/payment.aggregate';
 import { PaymentCreated } from '../../domain/events/payment.created';
 import { PaymentStatusFactory } from '../../domain/values/payment-status.value';
-import { PixService } from '../../infra/adapters/fake-pix/pix.service';
+import { PixService } from '../../infra/adapters/pix/pix.service';
 import { PaymentProvider } from '../abstractions/payment.provider';
 import { PaymentRepository } from '../abstractions/payment.repository';
 import { CreatePaymentCommand } from './create-payment.command';

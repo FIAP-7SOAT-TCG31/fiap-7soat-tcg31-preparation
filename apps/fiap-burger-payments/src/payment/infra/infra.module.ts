@@ -4,7 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PaymentFactory } from '../application/abstractions/payment.factory';
 import { PaymentProvider } from '../application/abstractions/payment.provider';
 import { PaymentRepository } from '../application/abstractions/payment.repository';
-import { PixService } from './adapters/fake-pix/pix.service';
+import { PixService } from './adapters/pix/pix.service';
 import { MongoosePaymentSchemaFactory } from './persistance/mongoose/payment-schema.factory';
 import { MongoosePaymentFactory } from './persistance/mongoose/payment.factory';
 import { MongoosePaymentRepository } from './persistance/mongoose/payment.repository';
