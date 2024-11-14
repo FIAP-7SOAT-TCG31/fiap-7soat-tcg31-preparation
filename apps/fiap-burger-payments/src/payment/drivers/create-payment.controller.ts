@@ -1,21 +1,21 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import {
-  DraftPaymentCommand,
-  DraftPaymentResult,
-} from '../application/commands/draft-payment.command';
-import { DraftPaymentInput } from '../application/dtos/draft-payment.input';
+  CreatePaymentCommand,
+  CreatePaymentResult,
+} from '../application/commands/create-payment.command';
+import { CreatePaymentInput } from '../application/dtos/create-payment.input';
 
 @Controller({ version: '1', path: 'payments' })
 export class CreatePaymentController {
   constructor(private readonly commandBus: CommandBus) {}
 
   @Post()
-  async execute(@Body() data: DraftPaymentInput) {
+  async execute(@Body() data: CreatePaymentInput) {
     const result = await this.commandBus.execute<
-      DraftPaymentCommand,
-      DraftPaymentResult
-    >(new DraftPaymentCommand(data));
+      CreatePaymentCommand,
+      CreatePaymentResult
+    >(new CreatePaymentCommand(data));
 
     return result.data;
   }

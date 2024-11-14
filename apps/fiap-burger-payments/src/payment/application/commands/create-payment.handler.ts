@@ -1,25 +1,22 @@
 import { Transactional } from '@fiap-burger/tactical-design/core';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { PaymentProvider } from '../abstractions/payment.provider';
-import { PaymentRepository } from '../abstractions/payment.repository';
-import { CreatePaymentCommand } from './create-payment.command';
+import { PaymentFactory } from '../abstractions/payment.factory';
+import {
+  CreatePaymentCommand,
+  CreatePaymentResult,
+} from './create-payment.command';
 
 @CommandHandler(CreatePaymentCommand)
 export class CreatePaymentHandler
-  implements ICommandHandler<CreatePaymentCommand, void>
+  implements ICommandHandler<CreatePaymentCommand, CreatePaymentResult>
 {
-  constructor(
-    private readonly repository: PaymentRepository,
-    private readonly paymentProvider: PaymentProvider,
-  ) {}
+  constructor(private readonly paymentFactory: PaymentFactory) {}
 
   @Transactional()
-  async execute({ id }: CreatePaymentCommand): Promise<void> {
-    const payment = await this.repository.findById(id);
-    const { conciliationId, content } =
-      await this.paymentProvider.createPixQRCode(payment.amount);
-    payment.create(content, conciliationId);
-    await this.repository.update(payment);
+  async execute({ data }: CreatePaymentCommand): Promise<CreatePaymentResult> {
+    const payment = await this.paymentFactory.create(data.type, data.amount);
+
     await payment.commit();
+    return new CreatePaymentResult({ id: payment.id });
   }
 }
