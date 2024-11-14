@@ -40,6 +40,7 @@
     "class-validator": "^0.14.1",
     "compression": "^1.7.4",
     "helmet": "^8.0.0",
+    "mercadopago": "^2.0.15",
     "mongoose": "^8.7.2",
     "nest-winston": "^1.9.7",
     "reflect-metadata": "^0.2.0",
@@ -85,13 +86,16 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/apps/**/*.(t|j)s",
+      "!**/*.config.(t|j)s",
+      "!**/test/**",
+      "!**/*.(spec|test)(t|j)s"
     ],
     "coverageDirectory": "./coverage",
     "coverageThreshold": {
       "global": {
-        "lines": 70,
-        "branches": 70
+        "lines": 80,
+        "branches": 80
       }
     },
     "testEnvironment": "node",
@@ -104,7 +108,8 @@
       "^@fiap-burger/tactical-design(|/.*)$": "<rootDir>/libs/tactical-design/src/$1",
       "^@fiap-burger/test-factory(|/.*)$": "<rootDir>/test/libs/test-factory/src/$1",
       "^@fiap-burger/acceptance-factory(|/.*)$": "<rootDir>/test/libs/acceptance-factory/src/$1",
-      "^@fiap-burger/amqp(|/.*)$": "<rootDir>/libs/amqp/src/$1"
+      "^@fiap-burger/amqp(|/.*)$": "<rootDir>/libs/amqp/src/$1",
+      "^@fiap-burger/external-providers(|/.*)$": "<rootDir>/libs/external-providers/src/$1"
     }
   }
 }
