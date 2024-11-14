@@ -18,7 +18,6 @@ export class MongoosePaymentFactory implements PaymentFactory {
       PaymentStatusFactory.draft(),
       null,
     );
-    payment.draft();
     await this.paymentRepository.create(payment);
     return payment;
   }

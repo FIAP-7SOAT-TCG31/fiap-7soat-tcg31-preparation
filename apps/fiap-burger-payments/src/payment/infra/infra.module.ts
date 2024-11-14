@@ -1,9 +1,10 @@
+import { PixProviderModule } from '@fiap-burger/external-providers/pix';
 import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PaymentFactory } from '../application/abstractions/payment.factory';
 import { PaymentProvider } from '../application/abstractions/payment.provider';
 import { PaymentRepository } from '../application/abstractions/payment.repository';
+import { PixService } from './adapters/fake-pix/pix.service';
 import { MongoosePaymentSchemaFactory } from './persistance/mongoose/payment-schema.factory';
 import { MongoosePaymentFactory } from './persistance/mongoose/payment.factory';
 import { MongoosePaymentRepository } from './persistance/mongoose/payment.repository';
@@ -11,8 +12,6 @@ import {
   MongoosePaymentSchema,
   MongoosePaymentSchemaModel,
 } from './persistance/mongoose/payment.schema';
-import { FakePixService } from './providers/fake-pix/fake-pix.service';
-import { MercadoPagoService } from './providers/mercadopago/mercado-pago.service';
 
 const MongooseSchemaModule = MongooseModule.forFeature([
   {
@@ -24,20 +23,12 @@ const MongooseSchemaModule = MongooseModule.forFeature([
 MongooseSchemaModule.global = true;
 
 @Module({
-  imports: [MongooseSchemaModule],
+  imports: [MongooseSchemaModule, PixProviderModule],
   providers: [
     MongoosePaymentSchemaFactory,
     {
       provide: PaymentProvider,
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
-        const provider = config.get('PAYMENT_PROVIDER');
-        if (provider === 'MERCADO_PAGO') {
-          return new MercadoPagoService(config);
-        } else {
-          return new FakePixService();
-        }
-      },
+      useClass: PixService,
     },
     {
       provide: PaymentFactory,

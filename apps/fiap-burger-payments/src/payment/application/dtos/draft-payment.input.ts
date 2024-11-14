@@ -1,8 +1,9 @@
 import { IsNumber, IsString } from 'class-validator';
+import { PaymentType } from '../../domain/values/payment.types';
 
 export class DraftPaymentInput {
   @IsString()
-  type: string;
+  type: PaymentType;
 
   @IsNumber()
   amount: number;

@@ -15,6 +15,7 @@ export class DraftPaymentHandler
   @Transactional()
   async execute({ data }: DraftPaymentCommand): Promise<DraftPaymentResult> {
     const payment = await this.paymentFactory.create(data.type, data.amount);
+    payment.draft();
     await payment.commit();
     return new DraftPaymentResult({ id: payment.id });
   }

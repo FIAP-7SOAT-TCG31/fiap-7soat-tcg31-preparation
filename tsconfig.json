@@ -47,6 +47,12 @@
       ],
       "@fiap-burger/amqp/*": [
         "libs/amqp/src/*"
+      ],
+      "@fiap-burger/external-providers": [
+        "libs/external-providers/src"
+      ],
+      "@fiap-burger/external-providers/*": [
+        "libs/external-providers/src/*"
       ]
     }
   }

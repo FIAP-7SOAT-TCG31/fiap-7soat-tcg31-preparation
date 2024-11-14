@@ -53,7 +53,7 @@ export class Payment extends AggregateRoot {
     this.apply(new PaymentDrafted(this._type, this.amount));
   }
 
-  onPaymentDrafted() {
+  protected onPaymentDrafted() {
     this._status = PaymentStatusFactory.draft();
   }
 
@@ -61,7 +61,7 @@ export class Payment extends AggregateRoot {
     this.apply(new PaymentCreated(conciliationId, content));
   }
 
-  onPaymentCreated({ content, conciliationId }: PaymentCreated) {
+  protected onPaymentCreated({ content, conciliationId }: PaymentCreated) {
     this._paymentInstruction = PaymentInstructionFactory.create(
       'PixQRCode',
       content,
@@ -74,7 +74,7 @@ export class Payment extends AggregateRoot {
     this.apply(new PaymentApproved());
   }
 
-  onPaymentApproved({ approvedAt }: PaymentApproved) {
+  protected onPaymentApproved({ approvedAt }: PaymentApproved) {
     this._status = this._status.approve();
     this._approvedAt = approvedAt;
   }
@@ -83,7 +83,7 @@ export class Payment extends AggregateRoot {
     this.apply(new PaymentRejected());
   }
 
-  onPaymentRejected({ rejectedAt }: PaymentRejected) {
+  protected onPaymentRejected({ rejectedAt }: PaymentRejected) {
     this._rejectedAt = rejectedAt;
     this._status = this._status.reject();
   }
