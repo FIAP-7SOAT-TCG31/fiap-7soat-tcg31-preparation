@@ -1,6 +1,6 @@
 import { IsNumber, IsString } from 'class-validator';
 
-export class DraftPaymentInput {
+export class CreatePaymentInput {
   @IsString()
   type: string;
 
@@ -8,6 +8,6 @@ export class DraftPaymentInput {
   amount: number;
 }
 
-export class DraftPaymentOutput {
+export class CreatePaymentOutput {
   id: string;
 }

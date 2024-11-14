@@ -13,8 +13,6 @@ export class MongoosePersistanceContext implements AggregatePersistanceContext {
 
   async commit(...events: AggregateEvent[]): Promise<void> {
     await Promise.all(events.map((x) => this.eventStorage.create(x)));
-    this.logger.debug(
-      `${events.length} events were saved to the event storage`,
-    );
+    this.logger.debug(`${events.length} were saved to the event storage`);
   }
 }

@@ -6,7 +6,7 @@ import { MongooseRepository } from '@fiap-burger/tactical-design/mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Payment } from '../../../domain/entities/payment.aggregate';
+import { Payment } from '../domain/payment.entity';
 import { MongoosePaymentSchemaFactory } from './payment-schema.factory';
 import { MongoosePaymentSchema } from './payment.schema';
 
