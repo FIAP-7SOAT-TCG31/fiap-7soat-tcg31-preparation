@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
 
-const rabbitmqHost = process.env.CI ? 'rabbitmq' : 'localhost';
-const mongodbHost = process.env.CI ? 'mongodb' : 'localhost';
+const rabbitmqHost = 'localhost';
+const mongodbHost = 'localhost';
 
 const basicBearer = `fiapburger:fiapburger`;
 export const virtualEnvironment = randomUUID().split('-').at(0);
