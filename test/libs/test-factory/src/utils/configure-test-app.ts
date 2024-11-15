@@ -29,6 +29,7 @@ export async function createTestApp(
   AppModule: Type<any>,
   options?: TestOptions,
 ) {
+  jest.setTimeout(10);
   const { env = {}, silentLogger = true } = options ?? {};
   if (silentLogger) {
     env['LOG_SILENT'] = 'true';
@@ -55,19 +56,17 @@ export async function createTestApp(
   configureOpenAPI(app);
 
   await app.init();
-  await setTimeout(100);
   return app;
 }
 
 const gracefulShutdownPeriod = () => setTimeout(250);
 
 export async function destroyTestApp(app: INestApplication) {
-  await setTimeout(100);
   const mongooseConnection = await app
     .resolve<MongooseConnection>(getConnectionToken())
     .catch(() => null);
   await mongooseConnection?.dropDatabase();
-  await axios.delete(`${rabbitmqURL}/api/vhosts/${virtualEnvironment}`);
-  await gracefulShutdownPeriod();
   await app.close();
+  await gracefulShutdownPeriod();
+  await axios.delete(`${rabbitmqURL}/api/vhosts/${virtualEnvironment}`);
 }
