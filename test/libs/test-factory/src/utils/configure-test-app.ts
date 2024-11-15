@@ -5,7 +5,6 @@ import {
   configureExceptionHandler,
   configureHelmet,
   configureHttpInspectorInbound,
-  configureHttpInspectorOutbound,
   configureLogger,
   configureOpenAPI,
   configureRoutePrefix,
@@ -45,7 +44,6 @@ export async function createTestApp(
   configureLogger(app);
   configureExceptionHandler(app);
   configureHttpInspectorInbound(app);
-  configureHttpInspectorOutbound(app);
   configureCORS(app);
   configureHelmet(app);
   configureCompression(app);
@@ -55,6 +53,7 @@ export async function createTestApp(
   configureOpenAPI(app);
 
   await app.init();
+  await setTimeout(250);
   return app;
 }
 
