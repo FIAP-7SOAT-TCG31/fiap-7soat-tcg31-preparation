@@ -72,5 +72,9 @@ jobs:
         run: npm install
       - name: Run Tests
         run: npm run test:acceptance
+      - name: "[DEBUG] docker ps"
+        run: docker ps
+      - name: "[DEBUG] docker logs"
+        run: docker logs fiapburger-payments
       - name: Teardown
         run: docker compose down -v
