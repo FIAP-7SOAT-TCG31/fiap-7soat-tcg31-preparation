@@ -3,6 +3,8 @@ import { AppModule } from '../src/app.module';
 
 export const env = {
   APP_NAME: 'fiap-burger-payments-test-app',
+  APP_DESCRIPTION: 'Payments Component for Fiap Burger',
+  APP_VERSION: '1.0.0',
 };
 
 export const createTestApp = (silentLogger: boolean = true) =>

@@ -14,7 +14,7 @@ export class AppConfig implements CommonOptionsFactory {
     const logFormat = this.config.get('LOG_FORMAT', 'json');
     const logLevel = this.config.get('LOG_LEVEL', 'info');
     const logSilent = this.config.get('LOG_SILENT', 'false');
-    const httpTrafficInspectionMode = this.config.getOrThrow(
+    const httpTrafficInspectionMode = this.config.get(
       'TRAFFIC_INSPECTION_HTTP_MODE',
       'all',
     );
