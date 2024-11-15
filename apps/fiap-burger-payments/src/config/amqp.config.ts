@@ -15,6 +15,7 @@ export class AmqpConfig implements AmqpOptionsFactory {
       this.config.getOrThrow('APP_NAME'),
       this.config.getOrThrow('AMQP_URL'),
     ];
+    console.log({ amqpURL: url });
     return {
       url,
       appName,
