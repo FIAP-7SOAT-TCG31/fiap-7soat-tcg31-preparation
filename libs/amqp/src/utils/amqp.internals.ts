@@ -54,7 +54,7 @@ export const InternalRabbitMQConfigFactory = (
     uri: options.url,
     exchanges: formatExchanges(exchanges),
     queues,
-    connectionInitOptions: { wait: false },
+    connectionInitOptions: { wait: true },
     channels: formatChannels(channels),
     connectionManagerOptions: {
       connectionOptions: {
