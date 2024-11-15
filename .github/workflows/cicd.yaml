@@ -74,7 +74,9 @@ jobs:
         run: npm install
       - name: Build the app
         run: npm run build
-      - name: Start the app
+      - name: Setup environment
+        run: cp .env.template .env
+      - name: Start the app in background
         run: pm2 start "npm start" --name App
       - name: Run Tests
         run: npm run test:acceptance
