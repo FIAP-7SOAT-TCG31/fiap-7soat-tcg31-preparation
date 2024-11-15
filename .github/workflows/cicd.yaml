@@ -54,6 +54,8 @@ jobs:
         run: npm install
       - name: Sleep for 120s
         run: sleep 120
+      - name: Run docker ps
+        run: docker ps
       - name: Run Tests
         run: npm run test:integration:cov
       - name: Teardown
