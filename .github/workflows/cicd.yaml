@@ -79,7 +79,10 @@ jobs:
       - name: Start the app in background
         run: pm2 start "npm start" --name App
       - name: "[DEBUG] PM2 Logs"
-        run: pm2 logs App --nostream
+        run: |
+          ls -al
+          pm2 ps
+          pm2 logs App --nostream
       - name: Run Tests
         run: npm run test:acceptance
       - name: Teardown
