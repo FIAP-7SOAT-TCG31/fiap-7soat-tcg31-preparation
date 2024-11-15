@@ -68,7 +68,7 @@ describe('RejectPaymentHandler', () => {
       new Types.ObjectId().toHexString(),
       199,
       'PixQRCode',
-      PaymentStatusFactory.draft(),
+      PaymentStatusFactory.create('Approved'),
       null,
     );
     jest.spyOn(payment as any, 'onPaymentRejected');
