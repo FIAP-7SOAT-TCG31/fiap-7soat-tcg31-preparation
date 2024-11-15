@@ -6,4 +6,8 @@ module.exports = {
   rootDir: '../..',
   testRegex: '.test.ts$',
   coverageDirectory: './coverage/integration',
+  collectCoverageFrom: [
+    ...jestConfig.collectCoverageFrom,
+    '!**/*.value.(t|j)s',
+  ],
 };

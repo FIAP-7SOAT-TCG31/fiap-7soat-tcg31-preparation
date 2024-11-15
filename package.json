@@ -87,9 +87,10 @@
     },
     "collectCoverageFrom": [
       "**/apps/**/*.(t|j)s",
+      "!**/main.(t|j)s",
       "!**/*.config.(t|j)s",
       "!**/test/**",
-      "!**/*.(spec|test)(t|j)s"
+      "!**/*.(spec|test).(t|j)s"
     ],
     "coverageDirectory": "./coverage",
     "coverageThreshold": {

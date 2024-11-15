@@ -66,9 +66,9 @@ export abstract class AggregateRoot extends Entity {
   }
 
   protected async commitAll(events: AggregateEvent[]): Promise<void> {
-    await Promise.all(
-      Object.values(this._contexts).map((x) => x.commit(...events)),
-    );
+    for (const context of Object.values(this._contexts)) {
+      await context.commit(...events);
+    }
   }
 
   private resetEvents() {
