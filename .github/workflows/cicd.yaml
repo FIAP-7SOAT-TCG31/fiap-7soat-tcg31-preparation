@@ -70,6 +70,8 @@ jobs:
         run: docker compose -f localstack/docker-compose.acceptance.yaml up -d
       - name: Install dependencies
         run: npm install
+      - name: "Wait 30s"
+        run: sleep 30
       - name: "[DEBUG] docker ps"
         run: docker ps
       - name: "[DEBUG] docker logs"
