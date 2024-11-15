@@ -52,10 +52,12 @@ jobs:
         run: docker compose up -d
       - name: Install Dependencies
         run: npm install
-      - name: Sleep for 60s
-        run: sleep 60
       - name: Run docker ps
         run: docker ps
+      - name: MongoDB Init Logs
+        run: docker logs fiapburger-mongodb-init
+      - name: MongoDB Logs
+        run: docker logs fiapburger-mongodb
       - name: Run Tests
         run: npm run test:integration:cov
       - name: Teardown
