@@ -67,25 +67,8 @@ jobs:
         with:
           node-version: '20.9'
       - name: Start Docker Dependencies
-        run: docker compose up -d
-      - name: Install PM2
-        run: npm i -g pm2
-      - name: Install Dependencies
-        run: npm install
-      - name: Build the app
-        run: npm run build
-      - name: Setup environment
-        run: cp .env.template .env
-      - name: Start the app in background
-        run: pm2 start "npm start" --name App
-      - name: "[DEBUG] PM2 Logs"
-        run: |
-          ls -al
-          pm2 ps
-          pm2 logs App --nostream
+        run: docker compose -f localstack/docker-compose.acceptance.yaml up -d
       - name: Run Tests
         run: npm run test:acceptance
       - name: Teardown
-        run: |
-          pm2 delete 0
-          docker compose down -v
+        run: docker compose down -v
