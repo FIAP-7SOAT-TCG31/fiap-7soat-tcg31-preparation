@@ -70,11 +70,11 @@ jobs:
         run: docker compose -f localstack/docker-compose.acceptance.yaml up -d
       - name: Install dependencies
         run: npm install
-      - name: Run Tests
-        run: npm run test:acceptance
       - name: "[DEBUG] docker ps"
         run: docker ps
       - name: "[DEBUG] docker logs"
         run: docker logs fiapburger-payments
+      - name: Run Tests
+        run: npm run test:acceptance
       - name: Teardown
         run: docker compose down -v
