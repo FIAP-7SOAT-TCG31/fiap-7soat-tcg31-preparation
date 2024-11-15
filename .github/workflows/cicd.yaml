@@ -52,13 +52,33 @@ jobs:
         run: docker compose up -d
       - name: Install Dependencies
         run: npm install
-      - name: Run docker ps
-        run: docker ps
-      - name: MongoDB Init Logs
-        run: docker logs fiapburger-mongodb-init
-      - name: MongoDB Logs
-        run: docker logs fiapburger-mongodb
       - name: Run Tests
         run: npm run test:integration:cov
       - name: Teardown
         run: docker compose down -v
+  test-acceptance:
+    name: 'Run Acceptance Tests'
+    runs-on: ubuntu-latest
+    needs: [build]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.9'
+      - name: Start Docker Dependencies
+        run: docker compose up -d
+      - name: Install PM2
+        run: npm i -g pm2
+      - name: Install Dependencies
+        run: npm install
+      - name: Build the app
+        run: npm run build
+      - name: Start the app
+        run: pm2 start "npm start" --name App
+      - name: Run Tests
+        run: npm run test:acceptance
+      - name: Teardown
+        run: |
+          pm2 delete 0
+          docker compose down -v
