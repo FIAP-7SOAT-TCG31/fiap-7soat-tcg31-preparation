@@ -10,7 +10,7 @@ describe('POST /v1/payments', () => {
   let server: App;
 
   beforeAll(async () => {
-    app = await createTestApp();
+    app = await createTestApp(false);
     server = app.getHttpServer();
   });
 
