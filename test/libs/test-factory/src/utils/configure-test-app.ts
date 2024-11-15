@@ -29,7 +29,6 @@ export async function createTestApp(
   AppModule: Type<any>,
   options?: TestOptions,
 ) {
-  jest.setTimeout(10);
   const { env = {}, silentLogger = true } = options ?? {};
   if (silentLogger) {
     env['LOG_SILENT'] = 'true';
