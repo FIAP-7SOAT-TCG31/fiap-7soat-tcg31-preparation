@@ -52,8 +52,8 @@ jobs:
         run: docker compose up -d
       - name: Install Dependencies
         run: npm install
-      - name: Sleep for 120s
-        run: sleep 120
+      - name: Sleep for 30s
+        run: sleep 30
       - name: Run docker ps
         run: docker ps
       - name: Run Tests
