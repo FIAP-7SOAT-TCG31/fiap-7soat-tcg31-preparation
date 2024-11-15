@@ -53,7 +53,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile.rabbitmq
-    hostname: rabbitmq
+    # hostname: rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: 'fiapburger'
       RABBITMQ_DEFAULT_PASS: 'fiapburger'
