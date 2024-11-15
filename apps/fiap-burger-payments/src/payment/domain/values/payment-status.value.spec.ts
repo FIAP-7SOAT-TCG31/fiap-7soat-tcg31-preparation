@@ -36,8 +36,8 @@ describe('PaymentStatus', () => {
   describe.each([
     [EPaymentStatus.Drafted, EPaymentStatus.Drafted, false],
     [EPaymentStatus.Drafted, EPaymentStatus.Created, true],
-    [EPaymentStatus.Drafted, EPaymentStatus.Approved, false],
-    [EPaymentStatus.Drafted, EPaymentStatus.Rejected, false],
+    [EPaymentStatus.Drafted, EPaymentStatus.Approved, true],
+    [EPaymentStatus.Drafted, EPaymentStatus.Rejected, true],
     [EPaymentStatus.Created, EPaymentStatus.Drafted, false],
     [EPaymentStatus.Created, EPaymentStatus.Created, false],
     [EPaymentStatus.Created, EPaymentStatus.Approved, true],

@@ -39,6 +39,14 @@ class DraftedPaymentStatus extends PaymentStatus {
   create(): PaymentStatus {
     return new CreatedPaymentStatus();
   }
+
+  approve(): PaymentStatus {
+    return new ApprovedPaymentStatus();
+  }
+
+  reject(): PaymentStatus {
+    return new RejectedPaymentStatus();
+  }
 }
 
 class CreatedPaymentStatus extends PaymentStatus {

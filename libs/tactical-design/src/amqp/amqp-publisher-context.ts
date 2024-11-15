@@ -1,8 +1,8 @@
-import { AmqpService } from '@fiap-burger/amqp';
 import {
-  CommonModuleOptions,
-  InjectCommonModuleOptions,
-} from '@fiap-burger/setup';
+  AmqpModuleOptions,
+  AmqpService,
+  InjectAmqpModuleOptions,
+} from '@fiap-burger/amqp';
 import { Injectable, Logger } from '@nestjs/common';
 import { AggregateEvent, AggregatePublisherContext } from '../core';
 import { routingKeyOf, toDottedNotation } from './amqp-publisher.utils';
@@ -13,12 +13,12 @@ export class AmqpPublisherContext implements AggregatePublisherContext {
 
   constructor(
     private readonly amqp: AmqpService,
-    @InjectCommonModuleOptions()
-    private readonly config: CommonModuleOptions,
+    @InjectAmqpModuleOptions()
+    private readonly config: AmqpModuleOptions,
   ) {}
 
   async commit(...events: AggregateEvent[]) {
-    const eventBusName = `${toDottedNotation(this.config.appName)}.events`;
+    const eventBusName = `${toDottedNotation(this.config.prefix)}.events`;
     await Promise.all(
       events.map((x) =>
         this.amqp.publish(

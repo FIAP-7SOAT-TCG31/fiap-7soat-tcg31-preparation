@@ -3,6 +3,7 @@ import { routingKeyOfEvent } from '@fiap-burger/tactical-design/amqp';
 import { AggregateEvent } from '@fiap-burger/tactical-design/core';
 import { Body, Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import { withPrefix } from '../../config/amqp.config';
 import { CreatePaymentCommand } from '../application/commands/create-payment.command';
 import { PaymentDrafted } from '../domain/events/payment.drafted';
 
@@ -11,9 +12,9 @@ export class OnPaymentDraftedCreatePaymentController {
   constructor(private readonly commandBus: CommandBus) {}
 
   @AmqpSubscription({
-    exchange: 'fiap.burger.payments.events',
+    exchange: withPrefix('events'),
     routingKey: routingKeyOfEvent(PaymentDrafted),
-    queue: 'fiap.burger.payments.create.payment',
+    queue: withPrefix(CreatePaymentCommand.name),
   })
   @AmqpRetrialPolicy({
     delay: 5000,
@@ -22,10 +23,6 @@ export class OnPaymentDraftedCreatePaymentController {
   })
   async execute(@Body() data: any) {
     const { aggregateId } = data as AggregateEvent<PaymentDrafted>;
-    await this.commandBus
-      .execute(new CreatePaymentCommand(aggregateId))
-      .catch((err) => {
-        console.log(err);
-      });
+    await this.commandBus.execute(new CreatePaymentCommand(aggregateId));
   }
 }

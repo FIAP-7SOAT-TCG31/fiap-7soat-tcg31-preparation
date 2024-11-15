@@ -3,6 +3,8 @@ import {
   RabbitMQExchangeConfig,
   RabbitMQQueueConfig,
 } from '@golevelup/nestjs-rabbitmq';
+import { Inject } from '@nestjs/common';
+import { MODULE_OPTIONS_TOKEN } from './amqp.module-builder';
 
 export type AmqpTrafficInspectionOptions = {
   mode?: 'none' | 'all' | 'inbound' | 'outbound';
@@ -21,6 +23,8 @@ export type AmqpModuleOptions = {
   channels?: (RabbitMQChannelConfig & { name: string })[];
   trafficInspection?: AmqpTrafficInspectionOptions;
 };
+
+export const InjectAmqpModuleOptions = () => Inject(MODULE_OPTIONS_TOKEN);
 
 export interface AmqpOptionsFactory {
   createAmqpOptions(): AmqpModuleOptions | Promise<AmqpModuleOptions>;

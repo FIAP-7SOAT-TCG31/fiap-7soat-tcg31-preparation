@@ -15,9 +15,10 @@ import {
 import { INestApplication, Type } from '@nestjs/common';
 import { getConnectionToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
+import axios from 'axios';
 import { Connection as MongooseConnection } from 'mongoose';
 import { setTimeout } from 'timers/promises';
-import { environment } from './environment';
+import { environment, rabbitmqURL, virtualEnvironment } from './environment';
 
 export type TestOptions = {
   env?: Record<string, any>;
@@ -35,6 +36,7 @@ export async function createTestApp(
   Object.entries({ ...env, ...environment }).forEach(
     ([key, value]) => (process.env[key] = value),
   );
+  await axios.put(`${rabbitmqURL}/api/vhosts/${virtualEnvironment}`);
   const moduleFixture: TestingModule = await Test.createTestingModule({
     imports: [AppModule],
   }).compile();
@@ -53,16 +55,19 @@ export async function createTestApp(
   configureOpenAPI(app);
 
   await app.init();
+  await setTimeout(100);
   return app;
 }
 
 const gracefulShutdownPeriod = () => setTimeout(250);
 
 export async function destroyTestApp(app: INestApplication) {
+  await setTimeout(100);
   const mongooseConnection = await app
     .resolve<MongooseConnection>(getConnectionToken())
     .catch(() => null);
   await mongooseConnection?.dropDatabase();
+  await axios.delete(`${rabbitmqURL}/api/vhosts/${virtualEnvironment}`);
   await gracefulShutdownPeriod();
   await app.close();
 }
