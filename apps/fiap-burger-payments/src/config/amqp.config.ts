@@ -11,15 +11,16 @@ export class AmqpConfig implements AmqpOptionsFactory {
   constructor(private readonly config: ConfigService) {}
 
   createAmqpOptions(): AmqpModuleOptions {
-    const [appName, url] = [
+    const [appName, url, inspectionMode] = [
       this.config.getOrThrow('APP_NAME'),
       this.config.getOrThrow('AMQP_URL'),
+      this.config.get('TRAFFIC_INSPECTION_AMQP', 'all'),
     ];
-    console.log(JSON.stringify({ amqpURL: url, first8: url.slice(0, 8) }));
     return {
       url,
       appName,
       prefix: 'FiapBurgerPayments',
+      trafficInspection: { mode: inspectionMode },
       exchanges: [
         // ::StyleKeep::
         { name: withPrefix('events') },
