@@ -1,5 +1,5 @@
 services:
-  fiapburger-payments:
+  fiap-burger-payments:
     image: fiapburger/payments:latest
     build:
       context: ..
