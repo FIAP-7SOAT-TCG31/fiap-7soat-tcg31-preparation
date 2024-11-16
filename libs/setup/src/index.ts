@@ -25,3 +25,5 @@ export * from './utils/openapi.config';
 export * from './utils/route-prefix.config';
 export * from './utils/validation.config';
 export * from './utils/versioning.config';
+
+export * from './healthz/healthz.module';
