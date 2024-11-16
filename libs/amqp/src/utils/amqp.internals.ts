@@ -40,7 +40,7 @@ export class FailedIdempotencyCheckException extends InternalServerErrorExceptio
 export const InternalRabbitMQConfigFactory = (
   options: AmqpModuleOptions,
 ): RabbitMQConfig => {
-  const { exchanges = [] } = options;
+  const { exchanges = [], waitForConnection = false } = options;
   const exchangePrefix = options.prefix ?? '';
   const queues = mergeQueues(options, QueuesFromDecoratorsContainer);
   exchanges.push(getDelayedRetrialExchange(exchangePrefix));
@@ -54,7 +54,7 @@ export const InternalRabbitMQConfigFactory = (
     uri: options.url,
     exchanges: formatExchanges(exchanges),
     queues,
-    connectionInitOptions: { wait: true },
+    connectionInitOptions: { wait: waitForConnection },
     channels: formatChannels(channels),
     connectionManagerOptions: {
       connectionOptions: {
