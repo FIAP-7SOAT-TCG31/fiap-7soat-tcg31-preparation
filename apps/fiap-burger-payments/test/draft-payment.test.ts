@@ -5,8 +5,6 @@ import { App } from 'supertest/types';
 import { setTimeout } from 'timers/promises';
 import { createTestApp } from './create-app';
 
-jest.setTimeout(10000);
-
 describe('POST /v1/payments', () => {
   let app: INestApplication;
   let server: App;

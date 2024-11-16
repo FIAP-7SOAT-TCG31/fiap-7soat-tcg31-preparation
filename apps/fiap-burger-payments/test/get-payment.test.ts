@@ -6,8 +6,6 @@ import * as request from 'supertest';
 import { App } from 'supertest/types';
 import { createTestApp } from './create-app';
 
-jest.setTimeout(10000);
-
 describe('GET /v1/payments/:id', () => {
   let app: INestApplication;
   let server: App;
