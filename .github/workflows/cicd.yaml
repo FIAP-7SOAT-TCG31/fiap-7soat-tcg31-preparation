@@ -90,7 +90,7 @@ jobs:
       - name: Teardown
         run: docker compose down -v
   build-container:
-    name: 'Run Acceptance Tests'
+    name: 'Build Application Container'
     runs-on: ubuntu-latest
     needs: [test-acceptance, test-integration]
     if: github.ref == 'refs/heads/disabled'
@@ -111,6 +111,7 @@ jobs:
             gm50x/fiap-burger-payments:latest
             gm50x/fiap-burger-payments:v${{ github.run_number }}
   deploy:
+    name: 'Deploy Application'
     runs-on: ubuntu-latest
     needs: [build-container]
     environment: 'production'
