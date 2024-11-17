@@ -9,6 +9,7 @@ export * from './decorators/amqp-retrial-policy.decorator';
 export * from './decorators/amqp-subscription.decorator';
 export * from './decorators/amqp-throttle-policy.decorator';
 
+export * from './services/amqp-health-indicator.service';
 export * from './services/amqp.service';
 
 export * from './utils/amqp-delay.calculator';

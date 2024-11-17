@@ -1,8 +1,13 @@
 @Payment
 Feature: Payment Checkout
-  Company needs to charge customers somehow
+  Allows customers to execute payment instructions to buy products from Fiap Burger.
 
   Scenario: 
     Given a payment was requested
     When customer executes the payment instruction
     Then the payment gets approved
+
+  Scenario: 
+    Given a payment was requested
+    When the payment instruction is rejected
+    Then the payment gets rejected

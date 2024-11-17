@@ -29,8 +29,25 @@ export class PaymentSuite {
     );
   }
 
+  @When('the payment instruction is rejected')
+  async rejectPaymentInstructionAndSystemGetsNotified() {
+    await this.http.axiosRef.patch(
+      `http://localhost:3000/v1/payments/${this.paymentId}/reject`,
+    );
+  }
+
+  @Then('the payment gets rejected')
+  async verifyPaymentRejected() {
+    const res = await this.http.axiosRef.get(
+      `http://localhost:3000/v1/payments/${this.paymentId}`,
+    );
+
+    const paymentStatus = res.data.status;
+    assert.equal(paymentStatus, 'Rejected');
+  }
+
   @Then('the payment gets approved')
-  async verify() {
+  async verifyPaymentApproved() {
     const res = await this.http.axiosRef.get(
       `http://localhost:3000/v1/payments/${this.paymentId}`,
     );

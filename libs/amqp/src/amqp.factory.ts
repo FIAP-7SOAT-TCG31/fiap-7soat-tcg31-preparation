@@ -21,6 +21,7 @@ export type AmqpModuleOptions = {
   exchanges?: RabbitMQExchangeConfig[];
   queues?: RabbitMQQueueConfig[];
   channels?: (RabbitMQChannelConfig & { name: string })[];
+  waitForConnection?: boolean;
   trafficInspection?: AmqpTrafficInspectionOptions;
 };
 

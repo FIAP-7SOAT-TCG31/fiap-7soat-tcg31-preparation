@@ -5,7 +5,6 @@ import {
   configureExceptionHandler,
   configureHelmet,
   configureHttpInspectorInbound,
-  configureHttpInspectorOutbound,
   configureLogger,
   configureOpenAPI,
   configureRoutePrefix,
@@ -45,7 +44,6 @@ export async function createTestApp(
   configureLogger(app);
   configureExceptionHandler(app);
   configureHttpInspectorInbound(app);
-  configureHttpInspectorOutbound(app);
   configureCORS(app);
   configureHelmet(app);
   configureCompression(app);
@@ -55,19 +53,18 @@ export async function createTestApp(
   configureOpenAPI(app);
 
   await app.init();
-  await setTimeout(100);
+  await setTimeout(250);
   return app;
 }
 
 const gracefulShutdownPeriod = () => setTimeout(250);
 
 export async function destroyTestApp(app: INestApplication) {
-  await setTimeout(100);
   const mongooseConnection = await app
     .resolve<MongooseConnection>(getConnectionToken())
     .catch(() => null);
   await mongooseConnection?.dropDatabase();
-  await axios.delete(`${rabbitmqURL}/api/vhosts/${virtualEnvironment}`);
-  await gracefulShutdownPeriod();
   await app.close();
+  await gracefulShutdownPeriod();
+  await axios.delete(`${rabbitmqURL}/api/vhosts/${virtualEnvironment}`);
 }

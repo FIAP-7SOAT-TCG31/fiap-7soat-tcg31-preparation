@@ -1,0 +1,114 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fiap-burger-payments
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fiap-burger-payments
+  template:
+    metadata:
+      labels:
+        app: fiap-burger-payments
+    spec:
+      terminationGracePeriod: 90
+      automountServiceAccountToken: false
+      containers:
+        - name: fiap-burger-payments-app
+          image: gm50x/fiap-burger-payments:latest
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: fiap-burger-payments
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: APP_NAME
+              value: "FiapBurgerPayments"
+            - name: APP_DESCRIPTION
+              value: "Payments Component for Fiap Burger"
+            - name: APP_VERSION
+              value: "1.0.0"
+            - name: PORT
+              value: "3000"
+            - name: LOG_LEVEL
+              value: "info"
+            - name: LOG_FORMAT
+              value: "pretty" # pretty | json
+            - name: TRAFFIC_INSPECTION_HTTP
+              value: "all" # inbound|outbound|all|none
+            - name: TRAFFIC_INSPECTION_AMQP
+              value: "all" # inbound|outbound|all|none
+            - name: ROUTE_PREFIX
+              value: ""
+          ports:
+            - name: http
+              containerPort: 3000
+          resources:
+            requests:
+              cpu: 100m
+              memory: "256Mi"
+            limits:
+              cpu: 450m
+              memory: "512Mi"
+          livenessProbe:
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            periodSeconds: 15
+            httpGet:
+              path: /healthz
+              port: 3000
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            httpGet:
+              path: /healthz/self
+              port: 3000
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: fiap-burger-payments-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: fiap-burger-payments
+  minReplicas: 2
+  maxReplicas: 10
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 30
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 30
+    scaleUp:
+      stabilizationWindowSeconds: 30
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 30
+  metrics:
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 75
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fiap-burger-payments-lb-srv
+spec:
+  selector:
+    app: fiap-burger-payments
+  type: LoadBalancer
+  ports:
+    - name: http
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
