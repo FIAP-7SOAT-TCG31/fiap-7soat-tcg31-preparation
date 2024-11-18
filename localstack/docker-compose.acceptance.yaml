@@ -1,10 +1,10 @@
 services:
-  fiap-burger-payments:
+  fiap-burger-preparation:
     image: fiapburger/payments:latest
     build:
       context: ..
       args:
-        target: 'fiap-burger-payments'
+        target: 'fiap-burger-preparation'
     restart: 'on-failure'
     environment:
       NODE_ENV: 'development'

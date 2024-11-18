@@ -2,7 +2,7 @@ import { createTestApp as baseCreateTestApp } from '@fiap-burger/test-factory/ut
 import { AppModule } from '../src/app.module';
 
 export const env = {
-  APP_NAME: 'fiap-burger-payments-test-app',
+  APP_NAME: 'fiap-burger-preparation-test-app',
   APP_DESCRIPTION: 'Payments Component for Fiap Burger',
   APP_VERSION: '1.0.0',
 };
