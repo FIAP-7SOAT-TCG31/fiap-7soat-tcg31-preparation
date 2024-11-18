@@ -13,6 +13,7 @@ export class MongoosePreparationSchemaFactory
     return {
       _id: new Types.ObjectId(entity.id),
       description: entity.description,
+      items: entity.items,
       status: entity.status.value,
       requestedAt: entity.requestedAt,
       startedAt: entity.startedAt,
@@ -24,6 +25,7 @@ export class MongoosePreparationSchemaFactory
     return new Preparation(
       entitySchema._id.toHexString(),
       entitySchema.description,
+      entitySchema.items,
       PreparationStatusFactory.create(entitySchema.status),
       entitySchema.requestedAt,
       entitySchema.startedAt,

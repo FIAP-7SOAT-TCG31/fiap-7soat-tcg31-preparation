@@ -23,6 +23,7 @@ describe('MongoosePreparationSchemaFactory', () => {
     const preparation = new Preparation(
       new Types.ObjectId().toHexString(),
       'dummy',
+      [],
       PreparationStatusFactory.create('Completed'),
       new Date(),
       new Date(),
@@ -38,6 +39,7 @@ describe('MongoosePreparationSchemaFactory', () => {
     const preparation: MongoosePreparationSchema = {
       _id: new Types.ObjectId(),
       description: 'dummy',
+      items: [],
       requestedAt: new Date(),
       startedAt: new Date(),
       completedAt: new Date(),

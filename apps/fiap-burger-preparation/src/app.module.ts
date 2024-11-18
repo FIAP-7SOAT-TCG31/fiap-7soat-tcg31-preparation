@@ -12,6 +12,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AmqpConfig } from './config/amqp.config';
 import { AppConfig } from './config/app.config';
 import { MongooseConfig } from './config/mongoose.config';
+import { PreparationModule } from './preparation/preparation.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { MongooseConfig } from './config/mongoose.config';
     MongooseTacticalDesignModule,
     AmqpTacticalDesignModule,
     MongooseTransactionalModule,
+    PreparationModule,
   ],
 })
 export class AppModule {}

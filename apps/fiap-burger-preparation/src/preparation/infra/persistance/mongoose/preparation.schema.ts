@@ -7,6 +7,9 @@ export class MongoosePreparationSchema extends MongooseEntitySchema {
   @Prop()
   description: string;
 
+  @Prop({ type: [String] })
+  items: string[];
+
   @Prop({ type: String })
   status: PreparationStatusValues;
 
@@ -20,6 +23,6 @@ export class MongoosePreparationSchema extends MongooseEntitySchema {
   completedAt?: Date;
 }
 
-export const MongoosePaymentSchemaModel = SchemaFactory.createForClass(
+export const MongoosePreparationSchemaModel = SchemaFactory.createForClass(
   MongoosePreparationSchema,
 );

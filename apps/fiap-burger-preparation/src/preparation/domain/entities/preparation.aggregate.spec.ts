@@ -9,6 +9,7 @@ const createSpiedTarget = () => {
   const target = new Preparation(
     randomUUID(),
     'dummy',
+    [],
     PreparationStatusFactory.new(),
     null,
     null,

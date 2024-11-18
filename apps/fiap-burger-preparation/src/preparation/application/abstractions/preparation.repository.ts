@@ -6,4 +6,6 @@ export abstract class PreparationRepository implements Repository<Preparation> {
   abstract findAll(): Promise<Preparation[]>;
   abstract create(entity: Preparation): Promise<void>;
   abstract update(entity: Preparation): Promise<void>;
+
+  abstract generateId(): string;
 }

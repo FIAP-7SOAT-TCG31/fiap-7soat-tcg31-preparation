@@ -11,6 +11,7 @@ export class Preparation extends AggregateRoot {
   constructor(
     protected readonly _id: string,
     private readonly _description: string,
+    private readonly _items: string[],
     private readonly _status: PreparationStatus,
     private _requestedAt: Date,
     private _startedAt: Date,
@@ -21,6 +22,10 @@ export class Preparation extends AggregateRoot {
 
   get description() {
     return this._description;
+  }
+
+  get items() {
+    return this._items.map((x) => x);
   }
 
   get status() {
