@@ -1,4 +1,4 @@
-name: FiapBurgerPayments - CICD
+name: FiapBurgerPreparation - CICD
 
 on:
   push:
