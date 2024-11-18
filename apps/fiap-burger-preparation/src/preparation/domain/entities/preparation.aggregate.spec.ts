@@ -24,31 +24,6 @@ describe('Preparation', () => {
     jest.useFakeTimers();
   });
 
-  describe('.getWaitTime()', () => {
-    it('should throw if preparation is still in draft', () => {
-      const target = createSpiedTarget();
-      expect(() => target.getWaitTime()).toThrow(
-        'Cannot get wait time for drafted preparation',
-      );
-    });
-
-    it('should return a number of seconds if preparation has been requested', () => {
-      const target = createSpiedTarget();
-      target.request();
-      expect(target.getWaitTime()).toEqual(expect.any(Number));
-    });
-
-    it('should return a number of seconds if preparation has been completed', () => {
-      const target = createSpiedTarget();
-      target.request();
-      jest.advanceTimersByTime(60000);
-      target.complete();
-      const result = target.getWaitTime();
-      expect(result).toEqual(expect.any(Number));
-      expect(result).toBeGreaterThanOrEqual(60);
-    });
-  });
-
   describe('.request()', () => {
     it('should request a preparation', () => {
       const target = createSpiedTarget();

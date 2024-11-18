@@ -2,10 +2,7 @@ import { AggregateRoot } from '@fiap-burger/tactical-design/core';
 import { PreparationCompleted } from '../events/preparation-completed.event';
 import { PreparationRequested } from '../events/preparation-requested.event';
 import { PreparationStarted } from '../events/preparation-started.event';
-import {
-  EPreparationStatus,
-  PreparationStatus,
-} from '../values/preparation-status.value';
+import { PreparationStatus } from '../values/preparation-status.value';
 
 export class Preparation extends AggregateRoot {
   constructor(
@@ -42,18 +39,6 @@ export class Preparation extends AggregateRoot {
 
   get completedAt() {
     return this._completedAt;
-  }
-
-  getWaitTime() {
-    if (!this.requestedAt) {
-      throw new Error('Cannot get wait time for drafted preparation');
-    }
-    let end = new Date();
-    if (this.status.value === EPreparationStatus.Completed) {
-      end = this._completedAt;
-    }
-
-    return end.getTime() - this._requestedAt.getTime() / 1000;
   }
 
   request() {
