@@ -1,15 +1,19 @@
 import { AggregateRoot } from '@fiap-burger/tactical-design/core';
+import { FinalPreparationStatus } from '../errors/final-preparation-status.exception';
 import { PreparationCompleted } from '../events/preparation-completed.event';
 import { PreparationRequested } from '../events/preparation-requested.event';
 import { PreparationStarted } from '../events/preparation-started.event';
-import { PreparationStatus } from '../values/preparation-status.value';
+import {
+  EPreparationStatus,
+  PreparationStatus,
+} from '../values/preparation-status.value';
 
 export class Preparation extends AggregateRoot {
   constructor(
     protected readonly _id: string,
     private readonly _description: string,
     private readonly _items: string[],
-    private readonly _status: PreparationStatus,
+    private _status: PreparationStatus,
     private _requestedAt: Date,
     private _startedAt: Date,
     private _completedAt: Date,
@@ -26,7 +30,7 @@ export class Preparation extends AggregateRoot {
   }
 
   get status() {
-    return this._status;
+    return this._status.value;
   }
 
   get requestedAt() {
@@ -39,6 +43,25 @@ export class Preparation extends AggregateRoot {
 
   get completedAt() {
     return this._completedAt;
+  }
+
+  isCompleted() {
+    return this.status === EPreparationStatus.Completed;
+  }
+
+  advanceStatus() {
+    switch (this.status) {
+      case EPreparationStatus.Completed:
+        throw new FinalPreparationStatus(this.id);
+      case EPreparationStatus.Requested:
+        this.start();
+        break;
+      case EPreparationStatus.Started:
+        this.complete();
+        break;
+      default:
+        throw new Error('UnreachableBlock');
+    }
   }
 
   request() {
@@ -54,6 +77,7 @@ export class Preparation extends AggregateRoot {
   }
 
   onPreparationStarted({ startedAt }: PreparationStarted) {
+    this._status = this._status.start();
     this._startedAt = startedAt;
   }
 
@@ -62,6 +86,7 @@ export class Preparation extends AggregateRoot {
   }
 
   onPreparationCompleted({ completedAt }: PreparationCompleted) {
+    this._status = this._status.complete();
     this._completedAt = completedAt;
   }
 }

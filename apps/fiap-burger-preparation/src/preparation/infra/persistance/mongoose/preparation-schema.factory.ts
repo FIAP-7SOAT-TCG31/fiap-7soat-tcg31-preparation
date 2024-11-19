@@ -14,7 +14,7 @@ export class MongoosePreparationSchemaFactory
       _id: new Types.ObjectId(entity.id),
       description: entity.description,
       items: entity.items,
-      status: entity.status.value,
+      status: entity.status,
       requestedAt: entity.requestedAt,
       startedAt: entity.startedAt,
       completedAt: entity.completedAt,
