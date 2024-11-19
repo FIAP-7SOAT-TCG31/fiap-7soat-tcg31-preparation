@@ -1,8 +1,8 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
-import { PaymentSuite } from './step-definitions/payment.suite';
+import { PreparationSuite } from './step-definitions/preparation.suite';
 @Module({
   imports: [HttpModule],
-  providers: [PaymentSuite],
+  providers: [PreparationSuite],
 })
 export class AppModule {}
