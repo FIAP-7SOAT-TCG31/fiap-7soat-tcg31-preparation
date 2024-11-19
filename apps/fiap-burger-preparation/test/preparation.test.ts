@@ -1,6 +1,7 @@
 import { destroyTestApp } from '@fiap-burger/test-factory/utils';
 import { INestApplication } from '@nestjs/common';
 import { randomUUID } from 'crypto';
+import { Types } from 'mongoose';
 import * as request from 'supertest';
 import { App } from 'supertest/types';
 import { createTestApp } from './create-app';
@@ -41,6 +42,18 @@ describe('Preparations', () => {
       expect(getResponse.body).toEqual(expect.objectContaining({ id }));
       expect(getResponse.body.status).toBe('Requested');
     });
+
+    it('should return not found for non existing preparation', async () => {
+      const id = new Types.ObjectId().toHexString();
+      const getResponse = await request(server).get(`${basePath}/${id}`);
+      expect(getResponse.statusCode).toBe(404);
+    });
+
+    it('should return bad request if an invalid id is provided', async () => {
+      const id = randomUUID();
+      const getResponse = await request(server).get(`${basePath}/${id}`);
+      expect(getResponse.statusCode).toBe(400);
+    });
   });
 
   describe('PATCH /v1/preparations/:id/advance', () => {
@@ -71,6 +84,13 @@ describe('Preparations', () => {
       expect(getResponse.statusCode).toBe(200);
       expect(getResponse.body.id).toBe(id);
       expect(getResponse.body.status).toBe('Completed');
+    });
+    it('should return not found when advancing a preparation that does not exist', async () => {
+      const id = new Types.ObjectId().toHexString();
+      const patchResponse = await request(server)
+        .patch(`${basePath}/${id}/advance`)
+        .send();
+      expect(patchResponse.statusCode).toBe(404);
     });
   });
 
@@ -114,6 +134,25 @@ describe('Preparations', () => {
       const getResponse = await request(server)
         .get(`${basePath}`)
         .query({ status: 'Completed' });
+      expect(getResponse.statusCode).toBe(200);
+      expect(getResponse.body.data).toBeInstanceOf(Array);
+      expect(getResponse.body.data).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ id: first.body.id }),
+        ]),
+      );
+    });
+
+    it('should return all existing preparations', async () => {
+      const firstInput = { orderId: randomUUID(), items: ['XBurger'] };
+      const secondInput = { orderId: randomUUID(), items: ['XBurger'] };
+      const [first] = await Promise.all([
+        request(server).post(basePath).send(firstInput),
+        request(server).post(basePath).send(secondInput),
+      ]);
+      const getResponse = await request(server)
+        .get(`${basePath}`)
+        .query({ orderId: firstInput.orderId });
       expect(getResponse.statusCode).toBe(200);
       expect(getResponse.body.data).toBeInstanceOf(Array);
       expect(getResponse.body.data).toEqual(
