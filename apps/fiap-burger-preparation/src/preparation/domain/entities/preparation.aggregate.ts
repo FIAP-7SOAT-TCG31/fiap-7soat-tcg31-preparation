@@ -45,10 +45,6 @@ export class Preparation extends AggregateRoot {
     return this._completedAt;
   }
 
-  isCompleted() {
-    return this.status === EPreparationStatus.Completed;
-  }
-
   advanceStatus() {
     switch (this.status) {
       case EPreparationStatus.Completed:
@@ -59,8 +55,6 @@ export class Preparation extends AggregateRoot {
       case EPreparationStatus.Started:
         this.complete();
         break;
-      default:
-        throw new Error('UnreachableBlock');
     }
   }
 
