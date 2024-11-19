@@ -23,7 +23,7 @@ export class QueryPreparationsHandler
     const { orderId, status } = data;
     const query: any = {};
     if (orderId) {
-      query.orderId = orderId;
+      query.description = `Order:${orderId}`;
     }
     if (status) {
       query.status = status;
