@@ -18,7 +18,7 @@ describe('GetPreparationByIdController', () => {
     queryBus = app.get(QueryBus);
   });
 
-  it('should return existing payment', async () => {
+  it('should return existing preparation', async () => {
     jest.spyOn(queryBus, 'execute').mockResolvedValue({ data: { id: '123' } });
     const id = randomUUID();
     const result = await target.execute(id);

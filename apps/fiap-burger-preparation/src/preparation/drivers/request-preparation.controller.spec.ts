@@ -18,7 +18,7 @@ describe('RequestPreparationController', () => {
     commandBus = app.get(CommandBus);
   });
 
-  it('should execute draft payment command', async () => {
+  it('should execute request preparation command', async () => {
     jest
       .spyOn(commandBus, 'execute')
       .mockResolvedValue({ data: { id: '123' } });

@@ -32,7 +32,7 @@ describe('GetPreparationByIdHandler', () => {
     model = app.get(getModelToken(MongoosePreparationSchema.name));
   });
 
-  it('should throw NotFound if payment does not exist', async () => {
+  it('should throw NotFound if preparation does not exist', async () => {
     const query = new GetPreparationByIdQuery(
       new Types.ObjectId().toHexString(),
     );
@@ -42,8 +42,8 @@ describe('GetPreparationByIdHandler', () => {
     );
   });
 
-  it('should return existing payment for existing payments', async () => {
-    const payment: MongoosePreparationSchema = {
+  it('should return existing preparation if found', async () => {
+    const schema: MongoosePreparationSchema = {
       _id: new Types.ObjectId(),
       description: 'dummy',
       items: ['XBurger'],
@@ -54,8 +54,8 @@ describe('GetPreparationByIdHandler', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    const query = new GetPreparationByIdQuery(payment._id.toHexString());
-    jest.spyOn(model, 'exec').mockResolvedValue(payment);
+    const query = new GetPreparationByIdQuery(schema._id.toHexString());
+    jest.spyOn(model, 'exec').mockResolvedValue(schema);
     const result = await target.execute(query);
     expect(result).toBeInstanceOf(GetPreparationByIdResult);
     expect(result.data).toBeInstanceOf(Preparation);

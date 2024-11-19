@@ -44,8 +44,8 @@ describe('QueryPreparationsHandler', () => {
     expect(result.data.length).toBe(0);
   });
 
-  it('should return existing payment for existing payments', async () => {
-    const payment: MongoosePreparationSchema = {
+  it('should return existing preparation if found', async () => {
+    const schema: MongoosePreparationSchema = {
       _id: new Types.ObjectId(),
       description: 'dummy',
       items: ['XBurger'],
@@ -60,7 +60,7 @@ describe('QueryPreparationsHandler', () => {
     dto.orderId = '123';
     dto.status = 'Completed';
     const query = new QueryPreparationsQuery(dto);
-    jest.spyOn(model, 'exec').mockResolvedValue([payment]);
+    jest.spyOn(model, 'exec').mockResolvedValue([schema]);
     const result = await target.execute(query);
     expect(result).toBeInstanceOf(QueryPreparationsResult);
     expect(result.data).toBeInstanceOf(Array);
