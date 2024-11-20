@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Entity, Repository } from '@fiap-burger/tactical-design/core';
+import { Types } from 'mongoose';
 
 export class FakeRepository<T extends Entity> implements Repository<T> {
   create(entity: T): Promise<void> {
@@ -13,5 +14,9 @@ export class FakeRepository<T extends Entity> implements Repository<T> {
   }
   findAll(): Promise<T[]> {
     throw new Error('Method not implemented.');
+  }
+
+  generateId(): string {
+    return new Types.ObjectId().toHexString();
   }
 }

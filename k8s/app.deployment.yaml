@@ -2,31 +2,31 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fiap-burger-payments
+  name: fiap-burger-preparation
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: fiap-burger-payments
+      app: fiap-burger-preparation
   template:
     metadata:
       labels:
-        app: fiap-burger-payments
+        app: fiap-burger-preparation
     spec:
       terminationGracePeriod: 90
       automountServiceAccountToken: false
       containers:
-        - name: fiap-burger-payments-app
-          image: gm50x/fiap-burger-payments:latest
+        - name: fiap-burger-preparation-app
+          image: gm50x/fiap-burger-preparation:latest
           imagePullPolicy: Always
           envFrom:
             - secretRef:
-                name: fiap-burger-payments
+                name: fiap-burger-preparation
           env:
             - name: NODE_ENV
               value: "production"
             - name: APP_NAME
-              value: "FiapBurgerPayments"
+              value: "FiapBurgerPreparation"
             - name: APP_DESCRIPTION
               value: "Payments Component for Fiap Burger"
             - name: APP_VERSION
@@ -70,12 +70,12 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: fiap-burger-payments-hpa
+  name: fiap-burger-preparation-hpa
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: fiap-burger-payments
+    name: fiap-burger-preparation
   minReplicas: 2
   maxReplicas: 10
   behavior:
@@ -102,10 +102,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: fiap-burger-payments-lb-srv
+  name: fiap-burger-preparation-lb-srv
 spec:
   selector:
-    app: fiap-burger-payments
+    app: fiap-burger-preparation
   type: LoadBalancer
   ports:
     - name: http
