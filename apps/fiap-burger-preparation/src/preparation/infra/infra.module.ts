@@ -5,12 +5,13 @@ import { TypeormPreparationSchemaFactory } from './persistance/typeorm/preparati
 import { TypeormPreparationRepository } from './persistance/typeorm/preparation.repository';
 import { TypeormPreparationSchema } from './persistance/typeorm/preparation.schema';
 
-const MongooseSchemaModule = TypeOrmModule.forFeature([
+const TypeormSchemaModule = TypeOrmModule.forFeature([
   TypeormPreparationSchema,
 ]);
 
+TypeormSchemaModule.global = true;
 @Module({
-  imports: [MongooseSchemaModule],
+  imports: [TypeormSchemaModule],
   providers: [
     TypeormPreparationSchemaFactory,
     {

@@ -1,9 +1,10 @@
-import { FakeMongooseModel } from '@fiap-burger/test-factory/utils';
+import { FakeTypeormRepository } from '@fiap-burger/test-factory/utils';
 import { INestApplication, NotFoundException } from '@nestjs/common';
-import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { randomUUID } from 'crypto';
 import { Types } from 'mongoose';
-import { MongoosePreparationSchema } from '../../infra/persistance/mongoose/preparation.schema';
+import { TypeormPreparationSchema } from '../../infra/persistance/typeorm/preparation.schema';
 import { Preparation } from '../dtos/preparation.dto';
 import { GetPreparationByIdHandler } from './get-preparation-by-id.handler';
 import {
@@ -14,37 +15,37 @@ import {
 describe('GetPreparationByIdHandler', () => {
   let app: INestApplication;
   let target: GetPreparationByIdHandler;
-  let model: FakeMongooseModel<MongoosePreparationSchema>;
+  let orm: FakeTypeormRepository<TypeormPreparationSchema>;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       providers: [
         GetPreparationByIdHandler,
         {
-          provide: getModelToken(MongoosePreparationSchema.name),
-          useClass: FakeMongooseModel,
+          provide: getRepositoryToken(TypeormPreparationSchema),
+          useClass: FakeTypeormRepository,
         },
       ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     target = app.get(GetPreparationByIdHandler);
-    model = app.get(getModelToken(MongoosePreparationSchema.name));
+    orm = app.get(getRepositoryToken(TypeormPreparationSchema));
   });
 
   it('should throw NotFound if preparation does not exist', async () => {
     const query = new GetPreparationByIdQuery(
       new Types.ObjectId().toHexString(),
     );
-    jest.spyOn(model, 'exec').mockResolvedValue(null);
+    jest.spyOn(orm, 'findOneBy').mockResolvedValue(null);
     await expect(() => target.execute(query)).rejects.toThrow(
       NotFoundException,
     );
   });
 
   it('should return existing preparation if found', async () => {
-    const schema: MongoosePreparationSchema = {
-      _id: new Types.ObjectId(),
+    const schema: TypeormPreparationSchema = {
+      _id: randomUUID(),
       description: 'dummy',
       items: ['XBurger'],
       completedAt: new Date(),
@@ -54,8 +55,8 @@ describe('GetPreparationByIdHandler', () => {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    const query = new GetPreparationByIdQuery(schema._id.toHexString());
-    jest.spyOn(model, 'exec').mockResolvedValue(schema);
+    const query = new GetPreparationByIdQuery(schema._id);
+    jest.spyOn(orm, 'findOneBy').mockResolvedValue(schema);
     const result = await target.execute(query);
     expect(result).toBeInstanceOf(GetPreparationByIdResult);
     expect(result.data).toBeInstanceOf(Preparation);

@@ -7,8 +7,8 @@ export class TypeormPreparationSchema extends TypeormEntitySchema {
   @Column('text', { name: 'Description' })
   description: string;
 
-  @Column('text', { name: 'Items' })
-  items: string;
+  @Column('text', { name: 'Items', array: true, default: [] })
+  items: string[];
 
   @Column('text', { name: 'Status' })
   status: PreparationStatusValues;

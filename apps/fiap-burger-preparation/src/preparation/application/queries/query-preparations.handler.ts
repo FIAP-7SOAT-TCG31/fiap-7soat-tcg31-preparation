@@ -1,19 +1,20 @@
-import { IQueryHandler } from '@nestjs/cqrs';
-import { Model } from 'mongoose';
-// import { MongoosePreparationSchema } from '../../infra/persistance/mongoose/preparation.schema';
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { TypeormPreparationSchema } from '../../infra/persistance/typeorm/preparation.schema';
 import { Preparation } from '../dtos/preparation.dto';
 import {
   QueryPreparationsQuery,
   QueryPreparationsResult,
 } from './query-preparations.query';
 
-// @QueryHandler(QueryPreparationsQuery)
+@QueryHandler(QueryPreparationsQuery)
 export class QueryPreparationsHandler
   implements IQueryHandler<QueryPreparationsQuery, QueryPreparationsResult>
 {
   constructor(
-    // @InjectModel(MongoosePreparationSchema.name)
-    private readonly queryModel: Model<any>,
+    @InjectRepository(TypeormPreparationSchema)
+    private readonly queryModel: Repository<TypeormPreparationSchema>,
   ) {}
 
   async execute({
@@ -27,13 +28,13 @@ export class QueryPreparationsHandler
     if (status) {
       query.status = status;
     }
-    const result = await this.queryModel.find(query).exec();
+    const result = await this.queryModel.find({ where: query });
 
     return new QueryPreparationsResult(
       (result ?? []).map(
         (x) =>
           new Preparation({
-            id: x._id.toHexString(),
+            id: x._id,
             description: x.description,
             items: x.items,
             status: x.status,

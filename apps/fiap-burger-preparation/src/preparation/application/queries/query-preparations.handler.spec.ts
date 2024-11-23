@@ -1,9 +1,9 @@
-import { FakeMongooseModel } from '@fiap-burger/test-factory/utils';
+import { FakeTypeormRepository } from '@fiap-burger/test-factory/utils';
 import { INestApplication } from '@nestjs/common';
-import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Types } from 'mongoose';
-import { MongoosePreparationSchema } from '../../infra/persistance/mongoose/preparation.schema';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { randomUUID } from 'crypto';
+import { TypeormPreparationSchema } from '../../infra/persistance/typeorm/preparation.schema';
 import { QueryPreparationsInput } from '../dtos/query-preparations.input';
 import { QueryPreparationsHandler } from './query-preparations.handler';
 import {
@@ -14,22 +14,22 @@ import {
 describe('QueryPreparationsHandler', () => {
   let app: INestApplication;
   let target: QueryPreparationsHandler;
-  let model: FakeMongooseModel<MongoosePreparationSchema>;
+  let orm: FakeTypeormRepository<TypeormPreparationSchema>;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       providers: [
         QueryPreparationsHandler,
         {
-          provide: getModelToken(MongoosePreparationSchema.name),
-          useClass: FakeMongooseModel,
+          provide: getRepositoryToken(TypeormPreparationSchema),
+          useClass: FakeTypeormRepository,
         },
       ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     target = app.get(QueryPreparationsHandler);
-    model = app.get(getModelToken(MongoosePreparationSchema.name));
+    orm = app.get(getRepositoryToken(TypeormPreparationSchema));
   });
 
   it('should emptyset if not found', async () => {
@@ -37,7 +37,7 @@ describe('QueryPreparationsHandler', () => {
     dto.orderId = '123';
     dto.status = 'Created';
     const query = new QueryPreparationsQuery(dto);
-    jest.spyOn(model, 'exec').mockResolvedValue(null);
+    jest.spyOn(orm, 'find').mockResolvedValue(null);
     const result = await target.execute(query);
     expect(result).toBeInstanceOf(QueryPreparationsResult);
     expect(result.data).toBeInstanceOf(Array);
@@ -45,8 +45,8 @@ describe('QueryPreparationsHandler', () => {
   });
 
   it('should return existing preparation if found', async () => {
-    const schema: MongoosePreparationSchema = {
-      _id: new Types.ObjectId(),
+    const schema: TypeormPreparationSchema = {
+      _id: randomUUID(),
       description: 'dummy',
       items: ['XBurger'],
       completedAt: new Date(),
@@ -60,7 +60,7 @@ describe('QueryPreparationsHandler', () => {
     dto.orderId = '123';
     dto.status = 'Completed';
     const query = new QueryPreparationsQuery(dto);
-    jest.spyOn(model, 'exec').mockResolvedValue([schema]);
+    jest.spyOn(orm, 'find').mockResolvedValue([schema]);
     const result = await target.execute(query);
     expect(result).toBeInstanceOf(QueryPreparationsResult);
     expect(result.data).toBeInstanceOf(Array);

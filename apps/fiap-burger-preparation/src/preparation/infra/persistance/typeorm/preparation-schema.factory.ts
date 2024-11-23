@@ -8,12 +8,11 @@ import { TypeormPreparationSchema } from './preparation.schema';
 export class TypeormPreparationSchemaFactory
   implements EntitySchemaFactory<TypeormPreparationSchema, Preparation>
 {
-  private readonly token = '<{@}>';
   entityToSchema(entity: Preparation): TypeormPreparationSchema {
     const schema = new TypeormPreparationSchema();
     schema._id = entity.id;
     schema.description = entity.description;
-    schema.items = entity.items.join(this.token);
+    schema.items = entity.items;
     schema.status = entity.status;
     schema.requestedAt = entity.requestedAt;
     schema.startedAt = entity.startedAt;
@@ -25,7 +24,7 @@ export class TypeormPreparationSchemaFactory
     return new Preparation(
       entitySchema._id,
       entitySchema.description,
-      entitySchema.items.split(this.token),
+      entitySchema.items,
       PreparationStatusFactory.create(entitySchema.status),
       entitySchema.requestedAt,
       entitySchema.startedAt,
