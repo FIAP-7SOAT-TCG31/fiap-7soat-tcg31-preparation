@@ -1,21 +1,20 @@
 import { NotFoundException } from '@nestjs/common';
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { InjectModel } from '@nestjs/mongoose';
+import { IQueryHandler } from '@nestjs/cqrs';
 import { Model, Types } from 'mongoose';
-import { MongoosePreparationSchema } from '../../infra/persistance/mongoose/preparation.schema';
+// import { MongoosePreparationSchema } from '../../infra/persistance/mongoose/preparation.schema';
 import { Preparation } from '../dtos/preparation.dto';
 import {
   GetPreparationByIdQuery,
   GetPreparationByIdResult,
 } from './get-preparation-by-id.query';
 
-@QueryHandler(GetPreparationByIdQuery)
+// @QueryHandler(GetPreparationByIdQuery)
 export class GetPreparationByIdHandler
   implements IQueryHandler<GetPreparationByIdQuery, GetPreparationByIdResult>
 {
   constructor(
-    @InjectModel(MongoosePreparationSchema.name)
-    private readonly queryModel: Model<MongoosePreparationSchema>,
+    // @InjectModel(MongoosePreparationSchema.name)
+    private readonly queryModel: Model<any>,
   ) {}
 
   async execute({

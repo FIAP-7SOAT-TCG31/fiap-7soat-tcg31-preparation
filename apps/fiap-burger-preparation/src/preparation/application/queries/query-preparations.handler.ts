@@ -1,20 +1,19 @@
-import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { InjectModel } from '@nestjs/mongoose';
+import { IQueryHandler } from '@nestjs/cqrs';
 import { Model } from 'mongoose';
-import { MongoosePreparationSchema } from '../../infra/persistance/mongoose/preparation.schema';
+// import { MongoosePreparationSchema } from '../../infra/persistance/mongoose/preparation.schema';
 import { Preparation } from '../dtos/preparation.dto';
 import {
   QueryPreparationsQuery,
   QueryPreparationsResult,
 } from './query-preparations.query';
 
-@QueryHandler(QueryPreparationsQuery)
+// @QueryHandler(QueryPreparationsQuery)
 export class QueryPreparationsHandler
   implements IQueryHandler<QueryPreparationsQuery, QueryPreparationsResult>
 {
   constructor(
-    @InjectModel(MongoosePreparationSchema.name)
-    private readonly queryModel: Model<MongoosePreparationSchema>,
+    // @InjectModel(MongoosePreparationSchema.name)
+    private readonly queryModel: Model<any>,
   ) {}
 
   async execute({

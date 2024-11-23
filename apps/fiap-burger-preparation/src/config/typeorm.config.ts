@@ -4,22 +4,25 @@ import {
 } from '@fiap-burger/setup';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  MongooseModuleOptions,
-  MongooseOptionsFactory,
-} from '@nestjs/mongoose';
+import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 
 @Injectable()
-export class MongooseConfig implements MongooseOptionsFactory {
+export class TypeormConfig implements TypeOrmOptionsFactory {
   constructor(
     private readonly config: ConfigService,
     @InjectCommonModuleOptions()
     private readonly options: CommonModuleOptions,
   ) {}
 
-  createMongooseOptions(): MongooseModuleOptions {
-    const uri = this.config.getOrThrow('MONGO_URL');
+  createTypeOrmOptions(): TypeOrmModuleOptions {
+    const url = this.config.getOrThrow('POSTGRES_URL');
     const appName = this.options.appName;
-    return { uri, appName };
+    return {
+      type: 'postgres',
+      url,
+      applicationName: appName,
+      autoLoadEntities: true,
+      synchronize: true,
+    };
   }
 }
