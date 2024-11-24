@@ -12,17 +12,23 @@ import {
   configureVersioning,
 } from '@fiap-burger/setup';
 import { INestApplication, Type } from '@nestjs/common';
-import { getConnectionToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import axios from 'axios';
-import { Connection as MongooseConnection } from 'mongoose';
 import { setTimeout } from 'timers/promises';
-import { environment, rabbitmqURL, virtualEnvironment } from './environment';
+import { DataSource } from 'typeorm';
+import {
+  environment,
+  postgresURL,
+  rabbitmqURL,
+  virtualEnvironment,
+} from './environment';
 
 export type TestOptions = {
   env?: Record<string, any>;
   silentLogger?: boolean;
 };
+
+let dataSource: DataSource;
 
 export async function createTestApp(
   AppModule: Type<any>,
@@ -35,6 +41,11 @@ export async function createTestApp(
   Object.entries({ ...env, ...environment }).forEach(
     ([key, value]) => (process.env[key] = value),
   );
+  dataSource = new DataSource({ url: postgresURL, type: 'postgres' });
+  await dataSource.initialize();
+  const queryRunner = dataSource.createQueryRunner();
+  await queryRunner.createDatabase(virtualEnvironment);
+  await queryRunner.release();
   await axios.put(`${rabbitmqURL}/api/vhosts/${virtualEnvironment}`);
   const moduleFixture: TestingModule = await Test.createTestingModule({
     imports: [AppModule],
@@ -60,11 +71,11 @@ export async function createTestApp(
 const gracefulShutdownPeriod = () => setTimeout(250);
 
 export async function destroyTestApp(app: INestApplication) {
-  const mongooseConnection = await app
-    .resolve<MongooseConnection>(getConnectionToken())
-    .catch(() => null);
-  await mongooseConnection?.dropDatabase();
   await app.close();
   await gracefulShutdownPeriod();
   await axios.delete(`${rabbitmqURL}/api/vhosts/${virtualEnvironment}`);
+  const queryRunner = dataSource.createQueryRunner();
+  await queryRunner.dropDatabase(virtualEnvironment);
+  await queryRunner.release();
+  await dataSource.destroy();
 }
