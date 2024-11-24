@@ -1,6 +1,6 @@
 services:
   fiap-burger-preparation:
-    image: fiapburger/payments:latest
+    image: fiapburger/preparation:latest
     build:
       context: ..
       args:
