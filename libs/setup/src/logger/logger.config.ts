@@ -21,7 +21,8 @@ const { combine, timestamp, json } = format;
 const { nestLike } = nestWinstonUtils.format;
 
 const contextify = format((info) => {
-  const context: Context = info.error?.context ?? contextService.getContext();
+  const context: Context =
+    (info.error as any)?.context ?? contextService.getContext();
   const contextId = context.getId();
   return { ...info, contextId };
 });
@@ -57,7 +58,7 @@ const service = () =>
   })();
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const treatError = format(({ stack: _stack, error, ...info }) => {
+const treatError = format(({ stack: _stack, error, ...info }: any) => {
   if (!error) {
     return info;
   }
@@ -75,7 +76,7 @@ const treatError = format(({ stack: _stack, error, ...info }) => {
 });
 
 const preventDefault = format((info) => {
-  /** TODO: this might hide uncatched errors */
+  /** TODO: this might hide uncaught errors */
   if (info.context === 'ExceptionsHandler') {
     return false;
   }

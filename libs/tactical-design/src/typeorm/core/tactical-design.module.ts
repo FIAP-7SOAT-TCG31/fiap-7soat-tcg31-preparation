@@ -1,30 +1,26 @@
 import { Global, Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AggregatePersistanceContext } from '../../core/domain/aggregate-root';
 import { EventRepository } from '../../core/domain/repository';
-import { MongoosePersistanceContext } from './aggregate-context';
+import { TypeormPersistanceContext } from './aggregate-context';
 import { AggregateEventsController } from './aggregate-events.controller';
-import { MongooseEventRepository } from './event.repository';
-import { EventSchema, MongooseEventSchema } from './event.schema';
+import { TypeormEventRepository } from './event.repository';
+import { EventSchema } from './event.schema';
 
 @Global()
 @Module({
-  imports: [
-    MongooseModule.forFeature([
-      { name: EventSchema.name, schema: MongooseEventSchema },
-    ]),
-  ],
+  imports: [TypeOrmModule.forFeature([EventSchema])],
   controllers: [AggregateEventsController],
   providers: [
     {
       provide: EventRepository,
-      useClass: MongooseEventRepository,
+      useClass: TypeormEventRepository,
     },
     {
       provide: AggregatePersistanceContext,
-      useClass: MongoosePersistanceContext,
+      useClass: TypeormPersistanceContext,
     },
   ],
   exports: [AggregatePersistanceContext],
 })
-export class MongooseTacticalDesignModule {}
+export class TypeormTacticalDesignModule {}

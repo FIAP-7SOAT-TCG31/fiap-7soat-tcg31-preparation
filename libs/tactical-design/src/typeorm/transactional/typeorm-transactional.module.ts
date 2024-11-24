@@ -1,12 +1,12 @@
 import { TransactionalModule } from '@fiap-burger/tactical-design/core';
 import { Module } from '@nestjs/common';
-import { MongooseTransactionManager } from './mongoose-transaction.manager';
+import { TypeormTransactionManager } from './typeorm-transaction.manager';
 
 @Module({
   imports: [
     TransactionalModule.forFeature({
-      TransactionManagerAdapter: MongooseTransactionManager,
+      TransactionManagerAdapter: TypeormTransactionManager,
     }),
   ],
 })
-export class MongooseTransactionalModule {}
+export class TypeormTransactionalModule {}

@@ -1,29 +1,22 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { PreparationRepository } from '../application/abstractions/preparation.repository';
-import { MongoosePreparationSchemaFactory } from './persistance/mongoose/preparation-schema.factory';
-import { MongoosePreparationRepository } from './persistance/mongoose/preparation.repository';
-import {
-  MongoosePreparationSchema,
-  MongoosePreparationSchemaModel,
-} from './persistance/mongoose/preparation.schema';
+import { TypeormPreparationSchemaFactory } from './persistance/typeorm/preparation-schema.factory';
+import { TypeormPreparationRepository } from './persistance/typeorm/preparation.repository';
+import { TypeormPreparationSchema } from './persistance/typeorm/preparation.schema';
 
-const MongooseSchemaModule = MongooseModule.forFeature([
-  {
-    name: MongoosePreparationSchema.name,
-    schema: MongoosePreparationSchemaModel,
-  },
+const TypeormSchemaModule = TypeOrmModule.forFeature([
+  TypeormPreparationSchema,
 ]);
 
-MongooseSchemaModule.global = true;
-
+TypeormSchemaModule.global = true;
 @Module({
-  imports: [MongooseSchemaModule],
+  imports: [TypeormSchemaModule],
   providers: [
-    MongoosePreparationSchemaFactory,
+    TypeormPreparationSchemaFactory,
     {
       provide: PreparationRepository,
-      useClass: MongoosePreparationRepository,
+      useClass: TypeormPreparationRepository,
     },
   ],
   exports: [PreparationRepository],

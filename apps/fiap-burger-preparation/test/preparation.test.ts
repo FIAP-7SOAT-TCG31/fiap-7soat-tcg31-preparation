@@ -1,7 +1,6 @@
 import { destroyTestApp } from '@fiap-burger/test-factory/utils';
 import { INestApplication } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { Types } from 'mongoose';
 import * as request from 'supertest';
 import { App } from 'supertest/types';
 import { createTestApp } from './create-app';
@@ -44,13 +43,13 @@ describe('Preparations', () => {
     });
 
     it('should return not found for non existing preparation', async () => {
-      const id = new Types.ObjectId().toHexString();
+      const id = randomUUID();
       const getResponse = await request(server).get(`${basePath}/${id}`);
       expect(getResponse.statusCode).toBe(404);
     });
 
     it('should return bad request if an invalid id is provided', async () => {
-      const id = randomUUID();
+      const id = `Invalid:${randomUUID()}`;
       const getResponse = await request(server).get(`${basePath}/${id}`);
       expect(getResponse.statusCode).toBe(400);
     });
@@ -86,7 +85,7 @@ describe('Preparations', () => {
       expect(getResponse.body.status).toBe('Completed');
     });
     it('should return not found when advancing a preparation that does not exist', async () => {
-      const id = new Types.ObjectId().toHexString();
+      const id = randomUUID();
       const patchResponse = await request(server)
         .patch(`${basePath}/${id}/advance`)
         .send();

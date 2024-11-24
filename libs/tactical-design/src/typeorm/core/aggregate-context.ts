@@ -6,8 +6,8 @@ import {
 import { EventRepository } from '../../core/domain/repository';
 
 @Injectable()
-export class MongoosePersistanceContext implements AggregatePersistanceContext {
-  private readonly logger = new Logger(MongoosePersistanceContext.name);
+export class TypeormPersistanceContext implements AggregatePersistanceContext {
+  private readonly logger = new Logger(TypeormPersistanceContext.name);
 
   constructor(private readonly eventStorage: EventRepository) {}
 

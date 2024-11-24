@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ClientSession, FilterQuery, Model, Types } from 'mongoose';
+import {
+  Repository as BaseTypeormRepository,
+  FindOptionsWhere,
+  QueryRunner,
+} from 'typeorm';
 import {
   AggregateMergeContext,
   AggregateRoot,
@@ -8,18 +12,18 @@ import {
   Repository,
   TransactionManager,
 } from '../../core';
-import { MongooseEntitySchema } from './entity.schema';
+import { TypeormEntitySchema } from './entity.schema';
 
 @Injectable()
-export abstract class MongooseRepository<
-  TSchema extends MongooseEntitySchema,
+export abstract class TypeormRepository<
+  TSchema extends TypeormEntitySchema,
   TEntity extends Entity,
 > implements Repository<TEntity>
 {
   constructor(
     protected readonly mergeContext: AggregateMergeContext,
     protected readonly transactionManager: TransactionManager,
-    protected readonly entityModel: Model<TSchema>,
+    protected readonly typeormRepository: BaseTypeormRepository<TSchema>,
     protected readonly entitySchemaFactory: EntitySchemaFactory<
       TSchema,
       TEntity
@@ -27,9 +31,7 @@ export abstract class MongooseRepository<
   ) {}
 
   async findById(id: string): Promise<TEntity> {
-    return this.findOne({
-      _id: new Types.ObjectId(id),
-    });
+    return this.findOne({ _id: id } as unknown as FindOptionsWhere<TSchema>);
   }
 
   async findAll(): Promise<TEntity[]> {
@@ -44,46 +46,52 @@ export abstract class MongooseRepository<
   }
 
   protected async find(
-    entityFilterQuery?: FilterQuery<TSchema>,
+    entityFilterQuery?: FindOptionsWhere<TSchema>,
   ): Promise<TEntity[]> {
-    const schemas = await this.entityModel
-      .find(entityFilterQuery, {}, { lean: true })
-      .exec();
+    const schemas = await this.typeormRepository.find({
+      where: entityFilterQuery,
+    });
     return schemas.map((schema) =>
-      this.merge(this.entitySchemaFactory.schemaToEntity(schema as TSchema)),
+      this.merge(this.entitySchemaFactory.schemaToEntity(schema)),
     );
   }
 
   async create(entity: TEntity): Promise<void> {
-    const session = this.getSession();
+    const queryRunner = this.getQueryRunner();
     const schema = this.entitySchemaFactory.entityToSchema(entity);
-    await new this.entityModel(schema).save({ session });
+    if (!queryRunner) {
+      await this.typeormRepository.save(schema);
+      return;
+    }
+    await queryRunner.manager.save(schema);
     this.merge(entity);
   }
 
   async update(entity: TEntity): Promise<void> {
-    const session = this.getSession();
+    const queryRunner = this.getQueryRunner();
     const schema = this.entitySchemaFactory.entityToSchema(entity);
-    await this.entityModel.updateOne({ _id: schema._id }, schema, { session });
+    if (!queryRunner) {
+      await this.typeormRepository.save(schema);
+      return;
+    }
+    await queryRunner.manager.save(schema);
   }
 
   protected async findOne(
-    entityFilterQuery?: FilterQuery<TSchema>,
+    entityFilterQuery?: FindOptionsWhere<TSchema>,
   ): Promise<TEntity> {
-    const schema = await this.entityModel
-      .findOne(entityFilterQuery, {}, { lean: true })
-      .exec();
+    const schema = await this.typeormRepository.findOne({
+      where: entityFilterQuery,
+    });
 
     if (!schema) {
       return;
     }
 
-    return this.merge(
-      this.entitySchemaFactory.schemaToEntity(schema as TSchema),
-    );
+    return this.merge(this.entitySchemaFactory.schemaToEntity(schema));
   }
 
-  protected getSession(): ClientSession | undefined {
+  protected getQueryRunner(): QueryRunner {
     return this.transactionManager.getRunningTransactionOrDefault()
       ?.hostTransaction;
   }

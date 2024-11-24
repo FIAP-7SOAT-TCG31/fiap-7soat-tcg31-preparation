@@ -3,15 +3,15 @@ import { CommonModule, ContextModule, HealthzModule } from '@fiap-burger/setup';
 import { AmqpTacticalDesignModule } from '@fiap-burger/tactical-design/amqp';
 import { TacticalDesignModule } from '@fiap-burger/tactical-design/core';
 import {
-  MongooseTacticalDesignModule,
-  MongooseTransactionalModule,
-} from '@fiap-burger/tactical-design/mongoose';
+  TypeormTacticalDesignModule,
+  TypeormTransactionalModule,
+} from '@fiap-burger/tactical-design/typeorm';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AmqpConfig } from './config/amqp.config';
 import { AppConfig } from './config/app.config';
-import { MongooseConfig } from './config/mongoose.config';
+import { TypeormConfig } from './config/typeorm.config';
 import { PreparationModule } from './preparation/preparation.module';
 
 @Module({
@@ -19,13 +19,13 @@ import { PreparationModule } from './preparation/preparation.module';
     ConfigModule.forRoot({ isGlobal: true }),
     ContextModule.forRoot({}),
     CommonModule.forRootAsync({ useClass: AppConfig }),
-    MongooseModule.forRootAsync({ useClass: MongooseConfig }),
+    TypeOrmModule.forRootAsync({ useClass: TypeormConfig }),
     AmqpModule.forRootAsync({ useClass: AmqpConfig }),
     HealthzModule,
     TacticalDesignModule,
-    MongooseTacticalDesignModule,
+    TypeormTacticalDesignModule,
+    TypeormTransactionalModule,
     AmqpTacticalDesignModule,
-    MongooseTransactionalModule,
     PreparationModule,
   ],
 })

@@ -2,16 +2,16 @@ import {
   AggregateMergeContext,
   TransactionManager,
 } from '@fiap-burger/tactical-design/core';
-import { FakeMongooseModel } from '@fiap-burger/test-factory/utils';
+import { FakeTypeormRepository } from '@fiap-burger/test-factory/utils';
 import { INestApplication } from '@nestjs/common';
-import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { PreparationRepository } from '../../../application/abstractions/preparation.repository';
-import { MongoosePreparationSchemaFactory } from './preparation-schema.factory';
-import { MongoosePreparationRepository } from './preparation.repository';
-import { MongoosePreparationSchema } from './preparation.schema';
+import { TypeormPreparationSchemaFactory } from './preparation-schema.factory';
+import { TypeormPreparationRepository } from './preparation.repository';
+import { TypeormPreparationSchema } from './preparation.schema';
 
-describe('MongoosePreparationRepository', () => {
+describe('TypeormPreparationRepository', () => {
   let app: INestApplication;
   let target: PreparationRepository;
 
@@ -23,20 +23,20 @@ describe('MongoosePreparationRepository', () => {
           useValue: Object.create(TransactionManager.prototype),
         },
         {
-          provide: getModelToken(MongoosePreparationSchema.name),
-          useClass: FakeMongooseModel,
-        },
-        {
-          provide: MongoosePreparationSchemaFactory,
-          useValue: Object.create(MongoosePreparationSchema.prototype),
+          provide: TypeormPreparationSchemaFactory,
+          useValue: Object.create(TypeormPreparationSchemaFactory.prototype),
         },
         {
           provide: AggregateMergeContext,
           useValue: Object.create(AggregateMergeContext.prototype),
         },
         {
+          provide: getRepositoryToken(TypeormPreparationSchema),
+          useValue: FakeTypeormRepository,
+        },
+        {
           provide: PreparationRepository,
-          useClass: MongoosePreparationRepository,
+          useClass: TypeormPreparationRepository,
         },
       ],
     }).compile();
@@ -46,6 +46,6 @@ describe('MongoosePreparationRepository', () => {
   });
 
   it('should instantiate correctly', async () => {
-    expect(target).toBeInstanceOf(MongoosePreparationRepository);
+    expect(target).toBeInstanceOf(TypeormPreparationRepository);
   });
 });

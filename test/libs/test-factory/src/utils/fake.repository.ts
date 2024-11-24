@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Entity, Repository } from '@fiap-burger/tactical-design/core';
-import { Types } from 'mongoose';
+import { randomUUID } from 'crypto';
 
 export class FakeRepository<T extends Entity> implements Repository<T> {
   create(entity: T): Promise<void> {
@@ -17,6 +17,6 @@ export class FakeRepository<T extends Entity> implements Repository<T> {
   }
 
   generateId(): string {
-    return new Types.ObjectId().toHexString();
+    return randomUUID();
   }
 }

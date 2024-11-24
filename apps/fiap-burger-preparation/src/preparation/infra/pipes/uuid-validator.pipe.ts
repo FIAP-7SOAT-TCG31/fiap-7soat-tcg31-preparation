@@ -1,7 +1,7 @@
 import { BadRequestException, PipeTransform } from '@nestjs/common';
-import { Types } from 'mongoose';
+import { isUUID } from 'class-validator';
 
-export class ObjectIdValidationPipe implements PipeTransform {
+export class UUIDValidationPipe implements PipeTransform {
   transform(value: any) {
     if (!this.isValid(value)) {
       throw new BadRequestException(
@@ -12,11 +12,6 @@ export class ObjectIdValidationPipe implements PipeTransform {
   }
 
   private isValid(value: string) {
-    try {
-      new Types.ObjectId(value);
-      return true;
-    } catch {
-      return false;
-    }
+    return isUUID(value);
   }
 }
