@@ -3,10 +3,10 @@ import { Controller, Get } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
-  HealthCheck,
-  HealthCheckService,
-  HttpHealthIndicator,
-  MongooseHealthIndicator,
+    HealthCheck,
+    HealthCheckService,
+    HttpHealthIndicator,
+    TypeOrmHealthIndicator,
 } from '@nestjs/terminus';
 
 @ApiTags('Health Check')
@@ -14,7 +14,7 @@ import {
 export class HealthzController {
   constructor(
     private readonly health: HealthCheckService,
-    private readonly mongodb: MongooseHealthIndicator,
+    private readonly database: TypeOrmHealthIndicator,
     private readonly http: HttpHealthIndicator,
     private readonly moduleRef: ModuleRef,
   ) {}
@@ -38,7 +38,7 @@ export class HealthzController {
     const amqp = this.tryGetAMQP();
 
     return this.health.check([
-      () => this.mongodb.pingCheck('Database'),
+      () => this.database.pingCheck('Database'),
       () =>
         this.http.pingCheck(
           'UpstreamSampleTest',
@@ -59,7 +59,7 @@ export class HealthzController {
     const amqp = this.tryGetAMQP();
 
     return this.health.check([
-      () => this.mongodb.pingCheck('Database'),
+      () => this.database.pingCheck('Database'),
       () => amqp?.isConnected('MessageBroker'),
     ]);
   }

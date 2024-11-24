@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { FilterQuery } from 'mongoose';
 import {
   Repository as BaseTypeormRepository,
   FindOptionsWhere,
@@ -47,7 +46,7 @@ export abstract class TypeormRepository<
   }
 
   protected async find(
-    entityFilterQuery?: FilterQuery<TSchema>,
+    entityFilterQuery?: FindOptionsWhere<TSchema>,
   ): Promise<TEntity[]> {
     const schemas = await this.typeormRepository.find({
       where: entityFilterQuery,

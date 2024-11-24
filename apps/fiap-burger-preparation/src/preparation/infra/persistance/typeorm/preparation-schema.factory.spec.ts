@@ -44,7 +44,7 @@ describe('TypeormPreparationSchemaFactory', () => {
     expect(result.status).toBe(preparation.status);
   });
 
-  it('should transform a MongooseSchema into a PreparationEntity', async () => {
+  it('should transform a PreparationSchema into a PreparationEntity', async () => {
     const actual: TypeormPreparationSchema = {
       _id: randomUUID(),
       items: ['X-Burger'],

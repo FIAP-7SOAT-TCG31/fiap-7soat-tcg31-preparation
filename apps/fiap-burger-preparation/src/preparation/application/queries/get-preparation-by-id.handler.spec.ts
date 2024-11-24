@@ -3,7 +3,6 @@ import { INestApplication, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { randomUUID } from 'crypto';
-import { Types } from 'mongoose';
 import { TypeormPreparationSchema } from '../../infra/persistance/typeorm/preparation.schema';
 import { Preparation } from '../dtos/preparation.dto';
 import { GetPreparationByIdHandler } from './get-preparation-by-id.handler';
@@ -34,9 +33,7 @@ describe('GetPreparationByIdHandler', () => {
   });
 
   it('should throw NotFound if preparation does not exist', async () => {
-    const query = new GetPreparationByIdQuery(
-      new Types.ObjectId().toHexString(),
-    );
+    const query = new GetPreparationByIdQuery(randomUUID());
     jest.spyOn(orm, 'findOneBy').mockResolvedValue(null);
     await expect(() => target.execute(query)).rejects.toThrow(
       NotFoundException,

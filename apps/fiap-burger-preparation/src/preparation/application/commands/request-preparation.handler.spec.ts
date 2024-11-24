@@ -5,7 +5,7 @@ import {
 } from '@fiap-burger/test-factory/utils';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Types } from 'mongoose';
+import { randomUUID } from 'crypto';
 import { PreparationRepository } from '../abstractions/preparation.repository';
 import { RequestPreparationCommand } from './request-preparation.command';
 import { RequestPreparationHandler } from './request-preparation.handler';
@@ -43,7 +43,7 @@ describe('RequestPreparationHandler', () => {
     jest.spyOn(repository, 'create').mockResolvedValue();
     const command = new RequestPreparationCommand({
       items: [],
-      orderId: new Types.ObjectId().toHexString(),
+      orderId: randomUUID(),
     });
     await target.execute(command);
     expect(repository.create).toHaveBeenCalled();
