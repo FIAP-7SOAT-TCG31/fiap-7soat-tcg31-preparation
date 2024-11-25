@@ -4,6 +4,7 @@ import { randomUUID } from 'crypto';
 import * as request from 'supertest';
 import { App } from 'supertest/types';
 import { createTestApp } from './create-app';
+import { fakeToken } from './fake.token';
 
 const basePath = '/v1/preparations';
 
@@ -58,10 +59,56 @@ describe('Preparations', () => {
   describe('PATCH /v1/preparations/:id/advance', () => {
     it('should advance preparation status', async () => {
       const input = { orderId: randomUUID(), items: ['XBurger'] };
+      const postResponse = await request(server)
+        .post(basePath)
+        .set('Authorization', fakeToken.admin)
+        .send(input);
+      const { id } = postResponse.body;
+      const patchResponse = await request(server)
+        .patch(`${basePath}/${id}/advance`)
+        .set('Authorization', fakeToken.admin)
+        .send();
+      expect(patchResponse.statusCode).toBe(200);
+      const getResponse = await request(server).get(`${basePath}/${id}`);
+      expect(getResponse.statusCode).toBe(200);
+      expect(getResponse.body.id).toBe(id);
+      expect(getResponse.body.status).toBe('Started');
+    });
+
+    it('should reject with 403 when invalid roles', async () => {
+      const input = { orderId: randomUUID(), items: ['XBurger'] };
+      const postResponse = await request(server)
+        .post(basePath)
+        .set('Authorization', fakeToken.admin)
+        .send(input);
+      const { id } = postResponse.body;
+      const patchResponse = await request(server)
+        .patch(`${basePath}/${id}/advance`)
+        .set('Authorization', fakeToken.customer)
+        .send();
+      expect(patchResponse.statusCode).toBe(403);
+    });
+
+    it('should reject with 401 when unauthorized', async () => {
+      const input = { orderId: randomUUID(), items: ['XBurger'] };
       const postResponse = await request(server).post(basePath).send(input);
       const { id } = postResponse.body;
       const patchResponse = await request(server)
         .patch(`${basePath}/${id}/advance`)
+        .send();
+      expect(patchResponse.statusCode).toBe(401);
+    });
+
+    it('should advance preparation status', async () => {
+      const input = { orderId: randomUUID(), items: ['XBurger'] };
+      const postResponse = await request(server)
+        .post(basePath)
+        .set('Authorization', fakeToken.admin)
+        .send(input);
+      const { id } = postResponse.body;
+      const patchResponse = await request(server)
+        .patch(`${basePath}/${id}/advance`)
+        .set('Authorization', fakeToken.admin)
         .send();
       expect(patchResponse.statusCode).toBe(200);
       const getResponse = await request(server).get(`${basePath}/${id}`);
@@ -73,10 +120,17 @@ describe('Preparations', () => {
       const input = { orderId: randomUUID(), items: ['XBurger'] };
       const postResponse = await request(server).post(basePath).send(input);
       const { id } = postResponse.body;
-      await request(server).patch(`${basePath}/${id}/advance`).send();
-      await request(server).patch(`${basePath}/${id}/advance`).send();
+      await request(server)
+        .patch(`${basePath}/${id}/advance`)
+        .set('Authorization', fakeToken.admin)
+        .send();
+      await request(server)
+        .patch(`${basePath}/${id}/advance`)
+        .set('Authorization', fakeToken.admin)
+        .send();
       const patchResponse = await request(server)
         .patch(`${basePath}/${id}/advance`)
+        .set('Authorization', fakeToken.admin)
         .send();
       expect(patchResponse.statusCode).toBe(422);
       const getResponse = await request(server).get(`${basePath}/${id}`);
@@ -88,6 +142,7 @@ describe('Preparations', () => {
       const id = randomUUID();
       const patchResponse = await request(server)
         .patch(`${basePath}/${id}/advance`)
+        .set('Authorization', fakeToken.admin)
         .send();
       expect(patchResponse.statusCode).toBe(404);
     });
@@ -122,12 +177,15 @@ describe('Preparations', () => {
 
       await request(server)
         .patch(`${basePath}/${first.body.id}/advance`)
+        .set('Authorization', fakeToken.admin)
         .send();
       await request(server)
         .patch(`${basePath}/${first.body.id}/advance`)
+        .set('Authorization', fakeToken.admin)
         .send();
       await request(server)
         .patch(`${basePath}/${second.body.id}/advance`)
+        .set('Authorization', fakeToken.admin)
         .send();
 
       const getResponse = await request(server)

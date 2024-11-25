@@ -1,5 +1,6 @@
 import { Given, Suite, Then, When } from '@fiap-burger/acceptance-factory';
 import { HttpService } from '@nestjs/axios';
+import { fakeToken } from 'apps/fiap-burger-preparation/test/fake.token';
 import { strict as assert } from 'assert';
 import { randomUUID } from 'crypto';
 
@@ -25,6 +26,8 @@ export class PreparationSuite {
   async advanceTargetStatus() {
     await this.http.axiosRef.patch(
       `http://localhost:5000/v1/preparations/${this.targetId}/advance`,
+      {},
+      { headers: { Authorization: fakeToken.admin } },
     );
   }
 
@@ -32,9 +35,13 @@ export class PreparationSuite {
   async advanceTargetStatusTwice() {
     await this.http.axiosRef.patch(
       `http://localhost:5000/v1/preparations/${this.targetId}/advance`,
+      {},
+      { headers: { Authorization: fakeToken.admin } },
     );
     await this.http.axiosRef.patch(
       `http://localhost:5000/v1/preparations/${this.targetId}/advance`,
+      {},
+      { headers: { Authorization: fakeToken.admin } },
     );
   }
 

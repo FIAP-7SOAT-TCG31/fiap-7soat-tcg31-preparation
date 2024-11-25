@@ -1,3 +1,4 @@
+import { WithRoles } from '@fiap-burger/setup';
 import { Controller, Param, Patch } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { AdvancePreparationCommand } from '../application/commands/adavance-preparation.command';
@@ -8,6 +9,7 @@ export class AdvancePreparationController {
   constructor(private readonly commandBus: CommandBus) {}
 
   @Patch(':id/advance')
+  @WithRoles('ADMIN')
   async execute(@Param('id', new UUIDValidationPipe()) id: string) {
     await this.commandBus.execute(new AdvancePreparationCommand(id));
   }
