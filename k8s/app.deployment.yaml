@@ -13,7 +13,7 @@ spec:
       labels:
         app: fiap-burger-preparation
     spec:
-      terminationGracePeriod: 90
+      terminationGracePeriodSeconds: 90
       automountServiceAccountToken: false
       containers:
         - name: fiap-burger-preparation-app
@@ -28,7 +28,7 @@ spec:
             - name: APP_NAME
               value: "FiapBurgerPreparation"
             - name: APP_DESCRIPTION
-              value: "Payments Component for Fiap Burger"
+              value: "Preparation Component for Fiap Burger"
             - name: APP_VERSION
               value: "1.0.0"
             - name: PORT
@@ -42,7 +42,7 @@ spec:
             - name: TRAFFIC_INSPECTION_AMQP
               value: "all" # inbound|outbound|all|none
             - name: ROUTE_PREFIX
-              value: ""
+              value: "fiap-burger-preparation"
           ports:
             - name: http
               containerPort: 3000
@@ -58,13 +58,13 @@ spec:
             failureThreshold: 3
             periodSeconds: 15
             httpGet:
-              path: /healthz
+              path: /fiap-burger-preparation/healthz
               port: 3000
           readinessProbe:
             initialDelaySeconds: 10
             periodSeconds: 10
             httpGet:
-              path: /healthz/self
+              path: /fiap-burger-preparation/healthz/self
               port: 3000
 ---
 apiVersion: autoscaling/v2
@@ -103,6 +103,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: fiap-burger-preparation-lb-srv
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: nlb
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
 spec:
   selector:
     app: fiap-burger-preparation
