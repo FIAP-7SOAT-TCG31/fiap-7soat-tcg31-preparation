@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: fiap-burger-preparation
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: fiap-burger-preparation
@@ -76,8 +76,8 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: fiap-burger-preparation
-  minReplicas: 2
-  maxReplicas: 10
+  minReplicas: 1
+  maxReplicas: 5
   behavior:
     scaleDown:
       stabilizationWindowSeconds: 30
