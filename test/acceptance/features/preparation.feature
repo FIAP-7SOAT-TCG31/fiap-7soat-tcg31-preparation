@@ -1,4 +1,4 @@
-@Payment
+@Preparation
 Feature: Prearation
   Allow colaborators to manage the process of preparing the meals.
 
