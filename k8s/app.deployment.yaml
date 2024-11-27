@@ -13,7 +13,7 @@ spec:
       labels:
         app: fiap-burger-preparation
     spec:
-      terminationGracePeriod: 90
+      terminationGracePeriodSeconds: 90
       automountServiceAccountToken: false
       containers:
         - name: fiap-burger-preparation-app
